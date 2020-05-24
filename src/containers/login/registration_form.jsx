@@ -10,6 +10,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import selectorreg from "../../selectors/registration";
 import Alert from "react-bootstrap/Alert";
+import {LOGIN_LINK} from "../../routes/link";
 
 class RegForm extends React.Component{
     constructor(props){
@@ -53,10 +54,13 @@ render(){
             <Card.Body>
                 <Form onSubmit={this.onSubmit}>
                     {
-                        this.props.regError &&
+                        this.props.regError ?
                         <Alert key="1" variant="danger">
                             Логин или e-mail занят
-                        </Alert>
+                        </Alert> : this.props.regError===false &&
+                            <Alert key="1" variant="success">
+                                Вы успешно зарегистрированы, перейдите на <a href={LOGIN_LINK}>страницу входа</a>
+                            </Alert>
                     }
                     <Form.Group controlId="formBasicLogin">
                         <Form.Label>Логин</Form.Label>

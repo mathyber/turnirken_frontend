@@ -1,7 +1,7 @@
 import {USER_REG_FAILURE, USER_REG_REQUEST, USER_REG_SUCCESS} from "../actions/registration";
 
 const initialState = {
-    regError: false
+    regError: null
 };
 
 export default function (state = initialState, { type, payload }) {
