@@ -33,6 +33,12 @@ class RegForm extends React.Component{
         this.setState({
             [name] : value
         })
+        if (event.target.name === "login") this.props.logtest({
+            str: event.target.value
+        });
+        if (event.target.name === "email") this.props.emtest({
+            str: event.target.value
+        });
     };
 
     onSubmit = (event) => {
@@ -65,11 +71,33 @@ render(){
                     <Form.Group controlId="formBasicLogin">
                         <Form.Label>Логин</Form.Label>
                         <Form.Control type="text" name="login" placeholder="Логин" onChange={this.onChangeInput} required/>
+                        {
+                            this.state.login === ''? " ":
+                            this.props.testLogin===false?
+                                <Form.Text style={{color: "green"}}>
+                                    Логин свободен
+                                </Form.Text>
+                                :
+                                <Form.Text style={{color: "red"}}>
+                                    Логин занят
+                                </Form.Text>
+                        }
                     </Form.Group>
 
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>E-mail</Form.Label>
                         <Form.Control type="email" name="email" placeholder="E-mail" onChange={this.onChangeInput} required/>
+                        {
+                            this.state.email === ''? " ":
+                                this.props.testEmail===false?
+                                    <Form.Text style={{color: "green"}}>
+                                        Email свободен
+                                    </Form.Text>
+                                    :
+                                    <Form.Text style={{color: "red"}}>
+                                        Email занят
+                                    </Form.Text>
+                        }
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
@@ -103,11 +131,17 @@ render(){
 };
 
 const mapStateToProps = state => ({
-    regError: selectorreg.regError(state)
+    regError: selectorreg.regError(state),
+    testEmail: selectorreg.testEmail(state),
+    testLogin: selectorreg.testLogin(state)
 });
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({reg: (data, history) => actions.userRegRequest(data, history)}, dispatch);
+    bindActionCreators({
+        reg: (data, history) => actions.userRegRequest(data, history),
+        logtest: (data, history) => actions.userTestLoginRequest(data, history),
+        emtest: (data, history) => actions.userTestEmailRequest(data, history)},
+        dispatch);
 
 export default compose(
     withRouter,
