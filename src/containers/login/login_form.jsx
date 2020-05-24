@@ -46,7 +46,8 @@ class LoginForm extends React.Component {
     render() {
         return (
 
-            <Card style={{width: '25rem', padding: '12px', margin: '12px'}}>
+            <Card style={{width: '25rem', margin: '12px'}}>
+                <Card.Header as="h5">Вход</Card.Header>
                 <Card.Body>
                     <Form onSubmit={this.onSubmit}>
                         <Form.Group controlId="formBasicEmail">

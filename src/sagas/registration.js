@@ -24,7 +24,7 @@ function* workerTestEmail({ payload, history }) {
     try {
         const b = yield call(() => postman.post('/user/registration/testEmail', payload));
         // yield console.log(postman.get("identity/userInfo"));
-        console.log(b);
+       // console.log(b);
         if (b) yield put(actions.userTestEmailSuccess());
         else yield put(actions.userTestEmailFailure());
     } catch (e) {
@@ -37,7 +37,7 @@ function* workerTestLogin({ payload, history }) {
     try {
         const b = yield call(() => postman.post('/user/registration/testLogin', payload));
         // yield console.log(postman.get("identity/userInfo"));
-        console.log(b);
+      //  console.log(b);
         if (b) yield put(actions.userTestLoginSuccess());
         else yield put(actions.userTestLoginFailure());
     } catch (e) {
