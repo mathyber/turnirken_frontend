@@ -4,7 +4,8 @@ import login from './login.js';
 import logout from './logout.js';
 import userProfile from './userProfile.js';
 import reg from './registration.js';
+import tours from './tournaments.js';
 
 export default function* rootSaga() {
-    yield all([fork(login), fork(logout), fork(userProfile), fork(reg)])
+    yield all([fork(login), fork(logout), fork(userProfile), fork(reg), fork(tours)])
 };

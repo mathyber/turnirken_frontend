@@ -1,7 +1,6 @@
 import React from "react";
 import {Dropdown, Navbar, Nav, NavDropdown} from "react-bootstrap";
-import {LOGIN_LINK, PROFILE_LINK, REG_LINK} from "../../routes/link";
-import {LinkContainer} from "react-router-bootstrap"
+import {LOGIN_LINK, PROFILE_LINK, REG_LINK, TOURNAMENTS_LINK} from "../../routes/link";
 import Button from "react-bootstrap/Button";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import JwtHelper from "../../utils/jwtHelper";
@@ -19,7 +18,7 @@ class Header extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-       if (prevProps.isAuth !== this.props.isAuth) {
+       if (prevProps.isAuth !== this.props.isAuth && this.props.isAuth) {
             this.props.getUserProfile();
        }
     }
@@ -39,7 +38,7 @@ class Header extends React.Component {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
-                            <Nav.Link href="#features">111</Nav.Link>
+                            <Nav.Link href={TOURNAMENTS_LINK}>Турниры</Nav.Link>
                             <Nav.Link href="#pricing">222</Nav.Link>
                         </Nav>
 
