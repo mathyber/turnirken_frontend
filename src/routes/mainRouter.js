@@ -1,9 +1,18 @@
 import React from "react";
-import {GRID_PAGE_LINK, LOGIN_LINK, PROFILE_LINK, REG_LINK, TOURNAMENT_CREATE_LINK, TOURNAMENTS_LINK} from "./link";
+import {
+    GRID_PAGE_LINK,
+    LOGIN_LINK,
+    PROFILE_LINK,
+    REG_LINK,
+    TOURNAMENT_CREATE_LINK,
+    TOURNAMENT_SETTINGS_LINK,
+    TOURNAMENTS_LINK
+} from "./link";
 import LoginForm from "../containers/login/login_form.jsx";
 import RegForm from "../containers/login/registration_form.jsx";
 import TournamentPage from "../containers/tournaments/tounaments_page";
 import TournamentCreatePage from "../containers/tournaments/tounament_create_page";
+import TournamentSettings from "../containers/tournaments/tounament_settings";
 import { Redirect, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./privateRoute";
 import JwtHelper from "../utils/jwtHelper";
@@ -16,7 +25,8 @@ function MainRouter() {
             <Route path={REG_LINK} render={() => JwtHelper.isTokenExist ?
                 <Redirect to={{pathname: {PROFILE_LINK}}} /> : <RegForm />} />
             <Route path={TOURNAMENTS_LINK} component={TournamentPage}/>
-            <Route path={TOURNAMENT_CREATE_LINK} component={TournamentCreatePage}/>
+            <PrivateRoute path={TOURNAMENT_CREATE_LINK} component={TournamentCreatePage}/>
+            <PrivateRoute path={TOURNAMENT_SETTINGS_LINK} component={TournamentSettings}/>
             <PrivateRoute path={GRID_PAGE_LINK} />
         </Switch>
     );

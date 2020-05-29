@@ -3,6 +3,7 @@ import actions from '../actions';
 import JwtHelper from '../utils/jwtHelper';
 import { postman, setAccessToken } from "../utils/postman";
 import {TOURNAMENT_CREATE_REQUEST, TOURNAMENTS_ALL_REQUEST} from "../actions/tournaments";
+import {TOURNAMENT_SETTINGS_LINK} from "../routes/link";
 
 function* workerToursAll() {
     try {
@@ -21,6 +22,7 @@ function* workerTourCreate({ payload, history }) {
         yield call(() => postman.post('/tournaments/createTournament', payload));
         // yield console.log(postman.get("identity/userInfo"));
         yield put(actions.tournamentCreateSuccess());
+        yield history.push(TOURNAMENT_SETTINGS_LINK);
     } catch (e) {
         console.log(e);
         yield put(actions.tournamentCreateFailure(e));

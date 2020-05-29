@@ -5,7 +5,7 @@ import {bindActionCreators, compose} from "redux";
 import actions from "../../actions";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
-import {LOGIN_LINK, TOURNAMENT_CREATE_LINK, TOURNAMENT_SETTINGS_LINK} from "../../routes/link";
+import {LOGIN_LINK, TOURNAMENT_CREATE_LINK} from "../../routes/link";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import selectorauth from "../../selectors/auth";
@@ -13,7 +13,7 @@ import JwtHelper from "../../utils/jwtHelper";
 import selectorreg from "../../selectors/registration";
 import selector from "../../selectors/userProfile";
 
-class TournamentPage extends React.Component {
+class TournamentSettings extends React.Component {
     date = new Date();
     constructor(props) {
         super(props);
@@ -21,7 +21,7 @@ class TournamentPage extends React.Component {
 
     componentDidMount() {
         this.props.tours();
-     //   this.props.getUserProfile();
+        this.props.getUserProfile();
         // console.log(this.props.isAuth)
     }
 
@@ -49,22 +49,13 @@ class TournamentPage extends React.Component {
                                     <Card.Text>
                                         { tour.info && tour.info.slice(0, 200)+"..."}
                                     </Card.Text>
-
-                                    {
-                                        tour.organizer.login === this.props.userProfile.login ?
-                                            <Button variant="info" disabled={ Date.parse(tour.dateFinish) < this.date} href={TOURNAMENT_SETTINGS_LINK}>
-                                                {
-                                                    <div>Редактировать</div>
-                                                }
-                                            </Button> :
-                                            <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || !this.props.isAuth}>
-                                                {
-                                                    Date.parse(tour.dateFinishReg) < this.date ? <div>Регистрация завершена</div> :
-                                                        this.props.isAuth? <div>Участвовать</div>
-                                                            : <div>Войдите, чтобы участвовать</div>
-                                                }
-                                            </Button>
-                                    }
+                                    <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || !this.props.isAuth}>
+                                        {
+                                            Date.parse(tour.dateFinishReg) < this.date ? <div>Регистрация завершена</div> :
+                                                this.props.isAuth? <div>Участвовать</div>
+                                                : <div>Войдите, чтобы участвовать</div>
+                                        }
+                                    </Button>
                                 </Card.Body>
                             </Card>)
 
@@ -85,11 +76,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
             tours: () => actions.tournamentsAllRequest(),
-         //   getUserProfile: () => dispatch(actions.userProfileRequest()),
+            getUserProfile: () => dispatch(actions.userProfileRequest()),
         },
         dispatch);
 
 export default compose(
     withRouter,
     connect(mapStateToProps, mapDispatchToProps)
-)(TournamentPage);
+)(TournamentSettings);
