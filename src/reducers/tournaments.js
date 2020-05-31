@@ -1,7 +1,7 @@
 import {
     TOURNAMENT_CREATE_FAILURE,
     TOURNAMENT_CREATE_REQUEST,
-    TOURNAMENT_CREATE_SUCCESS,
+    TOURNAMENT_CREATE_SUCCESS, TOURNAMENT_ID_FAILURE, TOURNAMENT_ID_REQUEST, TOURNAMENT_ID_SUCCESS,
     TOURNAMENT_SAVE_GRID_FAILURE,
     TOURNAMENT_SAVE_GRID_REQUEST,
     TOURNAMENT_SAVE_GRID_SUCCESS,
@@ -12,6 +12,7 @@ import {
 
 const initialState = {
     tournaments: [],
+    tournament: null,
     createError: null,
     gridError: null
 };
@@ -23,6 +24,13 @@ export default function (state = initialState, { type, payload }) {
         case TOURNAMENTS_ALL_SUCCESS:
             return { ...state, ...payload };
         case TOURNAMENTS_ALL_FAILURE:
+            return { ...state };
+
+        case TOURNAMENT_ID_REQUEST:
+            return { ...state, ...payload };
+        case TOURNAMENT_ID_SUCCESS:
+            return { ...state, ...payload };
+        case TOURNAMENT_ID_FAILURE:
             return { ...state };
 
         case TOURNAMENT_CREATE_REQUEST:

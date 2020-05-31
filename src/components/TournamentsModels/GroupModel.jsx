@@ -4,6 +4,8 @@ export class GroupModel extends SRD.DefaultNodeModel {
     constructor(name, numpart, numgroupwin, startnum) {
         super(name, "rgb(249, 82, 0)");
 
+        if(numgroupwin>startnum) numgroupwin = startnum;
+
         let type = "Group";
 
         for(let i = 0; i<startnum; i++ ){

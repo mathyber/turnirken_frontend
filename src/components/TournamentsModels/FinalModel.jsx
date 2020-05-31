@@ -4,7 +4,7 @@ export class FinalModel extends SRD.DefaultNodeModel {
     constructor(mesto) {
         let rgb;
 
-        switch (mesto) {
+        switch (mesto*1) {
             case 1 : {
                 rgb = "rgb(255,191,0)";
                 break;
@@ -24,8 +24,8 @@ export class FinalModel extends SRD.DefaultNodeModel {
         }
 
         let name = mesto + " место турнира"
-        if (mesto === 0) name = "Результат"
-        if (mesto === 1) name = "Победитель турнира"
+        if (mesto*1 === 0) name = "Результат"
+        if (mesto*1 === 1) name = "Победитель турнира"
 
         super(name, rgb);
 

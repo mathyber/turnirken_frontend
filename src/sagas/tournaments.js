@@ -2,7 +2,12 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import actions from '../actions';
 import JwtHelper from '../utils/jwtHelper';
 import { postman, setAccessToken } from "../utils/postman";
-import {TOURNAMENT_CREATE_REQUEST, TOURNAMENT_SAVE_GRID_REQUEST, TOURNAMENTS_ALL_REQUEST} from "../actions/tournaments";
+import {
+    TOURNAMENT_CREATE_REQUEST,
+    TOURNAMENT_ID_REQUEST,
+    TOURNAMENT_SAVE_GRID_REQUEST,
+    TOURNAMENTS_ALL_REQUEST
+} from "../actions/tournaments";
 import {TOURNAMENT_SETTINGS_LINK} from "../routes/link";
 
 function* workerToursAll() {
@@ -14,6 +19,18 @@ function* workerToursAll() {
     } catch (e) {
         console.log(e);
         yield put(actions.tournamentsAllFailure(e));
+    }
+}
+
+function* workerTourId({ payload }) {
+    try {
+        yield setAccessToken(JwtHelper.token);
+        const tour = yield call(() => postman.post("/tournaments/getTournamentId",{id: payload} ));
+        console.log(tour);
+        yield put(actions.tournamentIdSuccess({ tournament: tour }));
+    } catch (e) {
+        console.log(e);
+        yield put(actions.tournamentIdFailure(e));
     }
 }
 
@@ -46,4 +63,5 @@ export default function* watchToursAll() {
     yield takeLatest(TOURNAMENTS_ALL_REQUEST, workerToursAll)
     yield takeLatest(TOURNAMENT_CREATE_REQUEST, workerTourCreate)
     yield takeLatest(TOURNAMENT_SAVE_GRID_REQUEST, workerTourGrid)
+    yield takeLatest(TOURNAMENT_ID_REQUEST, workerTourId)
 }

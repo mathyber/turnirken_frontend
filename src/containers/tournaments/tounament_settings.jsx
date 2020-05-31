@@ -22,53 +22,117 @@ import * as User from "../../components/TournamentsModels/UserModel"
 import * as tTG from "./toTournamentGrig"
 import * as vse from "storm-react-diagrams/dist/style.min.css"
 import {UserModel} from "../../components/TournamentsModels/UserModel";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import CardGroup from "react-bootstrap/CardGroup";
 
 class TournamentSettings extends React.Component {
     date = new Date();
     engine = new SRD.DiagramEngine();
     model = new SRD.DiagramModel();
+
     constructor(props) {
         super(props);
+        this.state = {
+            group: "A",
+            groupNum: 4,
+            groupNumWin: 2,
+            stage: "Финал",
+            place: 3
+        }
         this.diagr = React.createRef();
         this.engine.installDefaultFactories();
         this.engine.setDiagramModel(this.model);
+
     }
 
     componentDidMount() {
-        this.props.tours();
+        this.props.tour(this.props.match.params.id);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.tournament !== this.props.tournament) {
+            for (let i = 0; i < this.props.tournament.maxParticipants; i++) {
+                this.model.addNode(new User.UserModel("Участник " + (i + 1))).setPosition(10, 10 + (i * 50));
+            }
+            this.model.addNode(new Final.FinalModel(1)).setPosition(400, 200);
+        }
     }
 
-    onClickSaveGrid(){
+    onClickSaveGrid() {
         console.log(this.model.serializeDiagram());
         console.log(tTG.default(this.model.serializeDiagram()));
         this.props.saveGrid({grid: tTG.default(this.model.serializeDiagram()), id: this.props.match.params.id});
     }
+
+    onChangeInput = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        this.setState({
+            [name]: value,
+            [name + "num"]: this.state[name + "num"]++
+        });
+    };
 
 
     render() {
         console.log(this.props);
         console.log(this.engine);
 
-
         return (
             <Card style={{margin: '12px'}}>
-                <SRD.DiagramWidget ref={this.diagr} diagramEngine={this.engine} />
-                <Button onClick={() => this.onClickSaveGrid()}>Отправить</Button>
-                <Button onClick={()=> {
-                    this.model.addNode(new User.UserModel("Участник")).setPosition(400, 200);
-                }}>Добавить участника</Button>
-                <Button onClick={()=> {
-                    this.model.addNode(new Group.GroupModel("Группа", 4, 2, 4)).setPosition(400, 200);
-                }}>Добавить группу</Button>
-                <Button onClick={()=> {
-                    this.model.addNode(new Match.MatchModel("Матч")).setPosition(400, 200);
-                }}>Добавить матч</Button>
-                <Button onClick={()=> {
-                    this.model.addNode(new Final.FinalModel(0)).setPosition(400, 200);
-                }}>Добавить результат</Button>
+                <Card.Body>
+
+                    <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
+                        <Form.Label column sm={2}>Имя группы:</Form.Label>
+                        <Col sm={2}>
+                            <Form.Control size="sm" type="text" name="group" onChange={this.onChangeInput}/>
+                        </Col>
+                        <Form.Label column sm={2}>Участников в группе:</Form.Label>
+                        <Col sm={1}>
+                            <Form.Control size="sm" type="number" name="groupNum" onChange={this.onChangeInput}/>
+                        </Col>
+                        <Form.Label column sm={2}>Выходит из группы:</Form.Label>
+                        <Col sm={1}>
+                            <Form.Control size="sm" type="number" name="groupNumWin" onChange={this.onChangeInput}/>
+                        </Col>
+                        <Col sm={1}>
+                            <Button  size="sm"  onClick={() => {
+                                this.model.addNode(new Group.GroupModel(this.state.group, this.state.groupNum, this.state.groupNumWin, this.state.groupNum)).setPosition(400, 200);
+                            }}>+группа</Button>
+                        </Col>
+
+                    </Form.Group>
+                    <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
+
+                        <Form.Label column sm={2}>Стадия:</Form.Label>
+                        <Col sm={2}>
+                            <Form.Control size="sm" type="text" name="stage" onChange={this.onChangeInput}/>
+                        </Col>
+                        <Col sm={1}>
+                            <Button  size="sm"  onClick={() => {
+                                this.model.addNode(new Match.MatchModel(this.state.stage)).setPosition(400, 200);
+                            }}>+матч</Button></Col>
+                        <Form.Label column sm={1}></Form.Label>
+                        <Form.Label column sm={2}>Место:</Form.Label>
+                        <Col sm={2}>
+                            <Form.Control size="sm" type="number" name="place" onChange={this.onChangeInput}/>
+                        </Col>
+                        <Col sm={1}>
+                            <Button size="sm" onClick={() => {
+                                this.model.addNode(new Final.FinalModel(this.state.place)).setPosition(400, 200);
+                            }}>+место</Button></Col>
+                    </Form.Group>
+
+                </Card.Body>
+                <SRD.DiagramWidget ref={this.diagr} diagramEngine={this.engine}/>
+                <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button>
+                <Col>
+
+
+                </Col>
+
             </Card>
 
 
@@ -76,17 +140,17 @@ class TournamentSettings extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isAuth: selectorauth.isAuth(state),
-    tournaments: selectortour.getTours(state),
+    tournament: selectortour.getTourId(state),
     getErrorGrid: selectortour.getErrorGrid(state),
     userProfile: selector.getProfile(state),
-   // engine: state.engine
+    // engine: state.engine
 });
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
-            tours: () => actions.tournamentsAllRequest(),
+            tour: (id) => actions.tournamentIdRequest(id),
             saveGrid: (payload) => dispatch(actions.tournamentSaveGridRequest(payload)),
         },
         dispatch);
