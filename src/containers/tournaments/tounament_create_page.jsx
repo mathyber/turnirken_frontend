@@ -85,7 +85,8 @@ class TournamentCreatePage extends React.Component {
 
                         <Form.Group controlId="exampleForm.SelectCustom">
                             <Form.Label>Информация о турнире</Form.Label>
-                            <Form.Control as="textarea" rows="3" name="info" onChange={this.onChangeInput} />
+                            <Form.Control as="textarea" rows="3" name="info" onChange={this.onChangeInput}
+                                          />
                         </Form.Group>
 
                         <Form.Group controlId="exampleForm.SelectCustom">

@@ -39,9 +39,9 @@ class TournamentSettings extends React.Component {
             groupNum: 4,
             groupNumWin: 2,
             stage: "Финал",
-            place: 3
+            place: 3,
+            grid: false
         }
-        this.diagr = React.createRef();
         this.engine.installDefaultFactories();
         this.engine.setDiagramModel(this.model);
 
@@ -53,17 +53,28 @@ class TournamentSettings extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.tournament !== this.props.tournament) {
+            if(this.props.tournament.grid===null) {this.setState({grid:true});
             for (let i = 0; i < this.props.tournament.maxParticipants; i++) {
                 this.model.addNode(new User.UserModel("Участник " + (i + 1))).setPosition(10, 10 + (i * 50));
             }
-            this.model.addNode(new Final.FinalModel(1)).setPosition(400, 200);
+            this.model.addNode(new Final.FinalModel(1)).setPosition(400, 200);}
+            else {
+                this.model.deSerializeDiagram(JSON.parse(this.props.tournament.grid), this.engine);
+            }
         }
     }
 
     onClickSaveGrid() {
         console.log(this.model.serializeDiagram());
         console.log(tTG.default(this.model.serializeDiagram()));
-        this.props.saveGrid({grid: tTG.default(this.model.serializeDiagram()), id: this.props.match.params.id});
+        this.props.saveGrid({
+            grid: JSON.stringify(this.model.serializeDiagram()),
+            users: tTG.default(this.model.serializeDiagram()).users,
+            results: tTG.default(this.model.serializeDiagram()).results,
+            matches: tTG.default(this.model.serializeDiagram()).matches,
+            groups: tTG.default(this.model.serializeDiagram()).groups,
+            id: this.props.match.params.id
+        })
     }
 
     onChangeInput = (event) => {
@@ -82,7 +93,9 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
-                <Card.Body>
+                {
+                    this.state.grid &&
+                    <Card.Body>
 
                     <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
                         <Form.Label column sm={2}>Имя группы:</Form.Label>
@@ -98,7 +111,7 @@ class TournamentSettings extends React.Component {
                             <Form.Control size="sm" type="number" name="groupNumWin" onChange={this.onChangeInput}/>
                         </Col>
                         <Col sm={1}>
-                            <Button  size="sm"  onClick={() => {
+                            <Button size="sm" onClick={() => {
                                 this.model.addNode(new Group.GroupModel(this.state.group, this.state.groupNum, this.state.groupNumWin, this.state.groupNum)).setPosition(400, 200);
                             }}>+группа</Button>
                         </Col>
@@ -111,7 +124,7 @@ class TournamentSettings extends React.Component {
                             <Form.Control size="sm" type="text" name="stage" onChange={this.onChangeInput}/>
                         </Col>
                         <Col sm={1}>
-                            <Button  size="sm"  onClick={() => {
+                            <Button size="sm" onClick={() => {
                                 this.model.addNode(new Match.MatchModel(this.state.stage)).setPosition(400, 200);
                             }}>+матч</Button></Col>
                         <Form.Label column sm={1}></Form.Label>
@@ -125,9 +138,12 @@ class TournamentSettings extends React.Component {
                             }}>+место</Button></Col>
                     </Form.Group>
 
-                </Card.Body>
-                <SRD.DiagramWidget ref={this.diagr} diagramEngine={this.engine}/>
-                <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button>
+                </Card.Body>}
+
+                <SRD.DiagramWidget diagramEngine={this.engine}/>
+                {
+                    this.state.grid && <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button>
+                }
                 <Col>
 
 
@@ -151,7 +167,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
             tour: (id) => actions.tournamentIdRequest(id),
-            saveGrid: (payload) => dispatch(actions.tournamentSaveGridRequest(payload)),
+            saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
         },
         dispatch);
 

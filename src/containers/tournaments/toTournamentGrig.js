@@ -14,7 +14,8 @@ export default function toTournamentGrid(model){
             case "user": {
                 users.push({
                     id: node.id,
-                    name: node.name
+                    name: node.name,
+                    linksout: portsInOut(model.nodes,node, false, links),
                 })
                 break;
             }
