@@ -26,6 +26,7 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import CardGroup from "react-bootstrap/CardGroup";
+import Alert from "react-bootstrap/Alert";
 
 class TournamentSettings extends React.Component {
     date = new Date();
@@ -40,7 +41,7 @@ class TournamentSettings extends React.Component {
             groupNumWin: 2,
             stage: "Финал",
             place: 3,
-            grid: false
+            grid: false,
         }
         this.engine.installDefaultFactories();
         this.engine.setDiagramModel(this.model);
@@ -93,6 +94,17 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
+                <Card.Header as="h4">Создание схемы турнира {this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}</Card.Header>
+                {
+                    this.props.getErrorGrid ?
+                        <Alert style={{margin: "15px"}} key="1" variant="danger">
+                            При сохранении произошла ошибка
+                        </Alert> : this.props.getErrorGrid===false &&
+                        <Alert style={{margin: "15px"}} key="2" variant="success">
+                            Сохранено
+                        </Alert>
+                }
+
                 {
                     this.state.grid &&
                     <Card.Body>
@@ -144,10 +156,6 @@ class TournamentSettings extends React.Component {
                 {
                     this.state.grid && <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button>
                 }
-                <Col>
-
-
-                </Col>
 
             </Card>
 

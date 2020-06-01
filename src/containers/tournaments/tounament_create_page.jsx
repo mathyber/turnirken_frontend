@@ -57,6 +57,7 @@ class TournamentCreatePage extends React.Component {
        // console.log(this.state)
         return (
             <Card style={{margin: '12px'}}>
+                <Card.Header as="h4">Создание турнира</Card.Header>
                 <Card.Body>
                     <Form onSubmit={this.onSubmit}>
                         <Form.Group controlId="formBasicLogin">

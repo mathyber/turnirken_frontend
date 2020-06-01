@@ -4,7 +4,7 @@ import JwtHelper from '../utils/jwtHelper';
 import { postman, setAccessToken } from "../utils/postman";
 import {
     TOURNAMENT_CREATE_REQUEST,
-    TOURNAMENT_ID_REQUEST,
+    TOURNAMENT_ID_REQUEST, TOURNAMENT_REG_REQUEST,
     TOURNAMENT_SAVE_GRID_REQUEST,
     TOURNAMENTS_ALL_REQUEST
 } from "../actions/tournaments";
@@ -58,10 +58,22 @@ function* workerTourGrid({ payload, history }) {
     }
 }
 
+function* workerTourReg({ payload, history }) {
+    try {
+        yield call(() => postman.post('/tournaments/goParticipate', payload));
+
+        yield put(actions.tournamentRegSuccess());
+        //  yield history.push("/tournament_settings/"+id);
+    } catch (e) {
+        console.log(e);
+        yield put(actions.tournamentRegFailure(e));
+    }
+}
 
 export default function* watchToursAll() {
     yield takeLatest(TOURNAMENTS_ALL_REQUEST, workerToursAll)
     yield takeLatest(TOURNAMENT_CREATE_REQUEST, workerTourCreate)
     yield takeLatest(TOURNAMENT_SAVE_GRID_REQUEST, workerTourGrid)
     yield takeLatest(TOURNAMENT_ID_REQUEST, workerTourId)
+    yield takeLatest(TOURNAMENT_REG_REQUEST, workerTourReg)
 }

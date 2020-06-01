@@ -10,6 +10,10 @@ export const TOURNAMENT_CREATE_REQUEST = 'TOURNAMENT_CREATE_REQUEST';
 export const TOURNAMENT_CREATE_SUCCESS = 'TOURNAMENT_CREATE_SUCCESS';
 export const TOURNAMENT_CREATE_FAILURE = 'TOURNAMENT_CREATE_FAILURE';
 
+export const TOURNAMENT_REG_REQUEST = 'TOURNAMENT_REG_REQUEST';
+export const TOURNAMENT_REG_SUCCESS = 'TOURNAMENT_REG_SUCCESS';
+export const TOURNAMENT_REG_FAILURE = 'TOURNAMENT_REG_FAILURE';
+
 export const TOURNAMENT_SAVE_GRID_REQUEST = 'TOURNAMENT_SAVE_GRID_REQUEST';
 export const TOURNAMENT_SAVE_GRID_SUCCESS = 'TOURNAMENT_SAVE_GRID_SUCCESS';
 export const TOURNAMENT_SAVE_GRID_FAILURE = 'TOURNAMENT_SAVE_GRID_FAILURE';
@@ -79,5 +83,21 @@ export const tournamentIdSuccess = (payload) => ({
 
 export const tournamentIdFailure = payload => ({
     type: TOURNAMENT_ID_FAILURE,
+    payload
+});
+
+export const tournamentRegRequest = (payload, history) => ({
+    type: TOURNAMENT_REG_REQUEST,
+    payload,
+    history
+});
+
+export const tournamentRegSuccess = (payload) => ({
+    type: TOURNAMENT_REG_SUCCESS,
+    payload
+});
+
+export const tournamentRegFailure = payload => ({
+    type: TOURNAMENT_REG_FAILURE,
     payload
 });

@@ -12,17 +12,27 @@ import selectorauth from "../../selectors/auth";
 import JwtHelper from "../../utils/jwtHelper";
 import selectorreg from "../../selectors/registration";
 import selector from "../../selectors/userProfile";
+import Alert from "react-bootstrap/Alert";
 
 class TournamentPage extends React.Component {
     date = new Date();
+
     constructor(props) {
         super(props);
+        this.state ={
+            num: 0
+        }
     }
 
     componentDidMount() {
         this.props.tours();
      //   this.props.getUserProfile();
         // console.log(this.props.isAuth)
+    }
+
+    onParticipate(id){
+        this.setState({num: id})
+        this.props.reg({id: id});
     }
 
     render() {
@@ -57,7 +67,7 @@ class TournamentPage extends React.Component {
                                                     <div>Редактировать</div>
                                                 }
                                             </Button> :
-                                            <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || !this.props.isAuth}>
+                                            <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || !this.props.isAuth} onClick={()=>this.onParticipate(tour.id)}>
                                                 {
                                                     Date.parse(tour.dateFinishReg) < this.date ? <div>Регистрация завершена</div> :
                                                         this.props.isAuth? <div>Участвовать</div>
@@ -74,17 +84,20 @@ class TournamentPage extends React.Component {
             </Card>
         )
     }
+
 }
 
 const mapStateToProps = state => ({
     isAuth: selectorauth.isAuth(state),
     tournaments: selectortour.getTours(state),
     userProfile: selector.getProfile(state),
+    regError: selectortour.getErrorReg(state),
 });
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
             tours: () => actions.tournamentsAllRequest(),
+            reg: (payload) => actions.tournamentRegRequest(payload),
          //   getUserProfile: () => dispatch(actions.userProfileRequest()),
         },
         dispatch);
