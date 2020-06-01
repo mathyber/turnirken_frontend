@@ -5,7 +5,13 @@ import {bindActionCreators, compose} from "redux";
 import actions from "../../actions";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
-import {LOGIN_LINK, TOUR_SETTINGS_LINK, TOURNAMENT_CREATE_LINK, TOURNAMENT_SETTINGS_LINK} from "../../routes/link";
+import {
+    LOGIN_LINK,
+    TOUR_ORGANIZER_PANEL_LINK,
+    TOUR_SETTINGS_LINK,
+    TOURNAMENT_CREATE_LINK,
+    TOURNAMENT_SETTINGS_LINK
+} from "../../routes/link";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import selectorauth from "../../selectors/auth";
@@ -62,7 +68,7 @@ class TournamentPage extends React.Component {
 
                                     {
                                         tour.organizer.login === this.props.userProfile.login ?
-                                            <Button variant="info" disabled={ Date.parse(tour.dateFinish) < this.date} href={TOUR_SETTINGS_LINK + tour.id}>
+                                            <Button variant="info" disabled={ Date.parse(tour.dateFinish) < this.date} href={TOUR_ORGANIZER_PANEL_LINK + tour.id}>
                                                 {
                                                     <div>Редактировать</div>
                                                 }

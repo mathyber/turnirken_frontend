@@ -4,8 +4,13 @@ import {
     TOURNAMENT_CREATE_SUCCESS,
     TOURNAMENT_ID_FAILURE,
     TOURNAMENT_ID_REQUEST,
-    TOURNAMENT_ID_SUCCESS, TOURNAMENT_REG_FAILURE,
-    TOURNAMENT_REG_REQUEST, TOURNAMENT_REG_SUCCESS,
+    TOURNAMENT_ID_SUCCESS,
+    TOURNAMENT_PARTICIPANTS_FAILURE,
+    TOURNAMENT_PARTICIPANTS_REQUEST,
+    TOURNAMENT_PARTICIPANTS_SUCCESS,
+    TOURNAMENT_REG_FAILURE,
+    TOURNAMENT_REG_REQUEST,
+    TOURNAMENT_REG_SUCCESS,
     TOURNAMENT_SAVE_GRID_FAILURE,
     TOURNAMENT_SAVE_GRID_REQUEST,
     TOURNAMENT_SAVE_GRID_SUCCESS,
@@ -16,10 +21,12 @@ import {
 
 const initialState = {
     tournaments: [],
+    participants: [],
     tournament: null,
     createError: null,
     gridError: null,
-    regError: null
+    regError: null,
+    pError: null
 };
 
 export default function (state = initialState, { type, payload }) {
@@ -58,6 +65,14 @@ export default function (state = initialState, { type, payload }) {
             return { ...state, ...payload, regError: false };
         case TOURNAMENT_REG_FAILURE:
             return { ...state, regError: true };
+
+
+        case TOURNAMENT_PARTICIPANTS_REQUEST:
+            return { ...state, ...payload };
+        case TOURNAMENT_PARTICIPANTS_SUCCESS:
+            return { ...state, ...payload, pError: false };
+        case TOURNAMENT_PARTICIPANTS_FAILURE:
+            return { ...state, pError: true };
 
         default:
             return state;

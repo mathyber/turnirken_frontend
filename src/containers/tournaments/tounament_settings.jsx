@@ -83,7 +83,6 @@ class TournamentSettings extends React.Component {
         const value = event.target.value;
         this.setState({
             [name]: value,
-            [name + "num"]: this.state[name + "num"]++
         });
     };
 

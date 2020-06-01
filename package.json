@@ -17,6 +17,7 @@
     "@projectstorm/react-diagrams": "^6.1.1",
     "axios": "^0.19.2",
     "axois": "0.0.1-security",
+    "babel-plugin-transform-react-statements": "^0.7.3",
     "bootstrap": "^4.4.1",
     "file-loader": "^5.0.2",
     "i18next-xhr-backend": "^3.2.2",
