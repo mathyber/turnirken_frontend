@@ -34,7 +34,7 @@ class Header extends React.Component {
         return (
             <header className="header">
                 <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
-                    <Navbar.Brand href="/"><b>ТУРНИРКЕН</b></Navbar.Brand>
+                    <Navbar.Brand href={TOURNAMENTS_LINK}><b>ТУРНИРКЕН</b></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">

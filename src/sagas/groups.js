@@ -3,7 +3,7 @@ import actions from '../actions';
 import JwtHelper from '../utils/jwtHelper';
 import { postman } from "../utils/postman";
 
-import {GROUPS_ALL_REQUEST} from "../actions/groups";
+import {GROUPS_ALL_REQUEST, GROUPS_SAVE_REQUEST} from "../actions/groups";
 
 function* workerGroupAll({ payload, history }) {
     try {
@@ -16,7 +16,18 @@ function* workerGroupAll({ payload, history }) {
     }
 }
 
+function* workerGroupSave({ payload, history }) {
+    try {
+        yield call(() => postman.post('/tournaments/setMatchesAndGroups', payload));
+       // yield console.log(groups);
+        yield put(actions.groupsSaveSuccess());
+    } catch (e) {
+        console.log(e);
+        yield put(actions.groupsSaveFailure(e));
+    }
+}
 
 export default function* watchReg() {
     yield takeLatest(GROUPS_ALL_REQUEST, workerGroupAll);
+    yield takeLatest(GROUPS_SAVE_REQUEST, workerGroupSave);
 }
