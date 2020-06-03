@@ -9,7 +9,7 @@ import {
     GROUP_SUCCESS,
     GROUP_REQUEST,
     GROUPS_FAILURE,
-    GROUPS_SUCCESS, GROUPS_REQUEST
+    GROUPS_SUCCESS, GROUPS_REQUEST, GROUPS_POINTS_REQUEST, GROUPS_POINTS_SUCCESS, GROUPS_POINTS_FAILURE
 } from "../actions/groups";
 
 
@@ -41,6 +41,14 @@ export default function (state = initialState, { type, payload }) {
         case GROUPS_SUCCESS:
             return { ...state, ...payload, grError: false };
         case GROUPS_FAILURE:
+            return { ...state, ...payload, grError: true };
+
+
+        case GROUPS_POINTS_REQUEST:
+            return { ...state, ...payload };
+        case GROUPS_POINTS_SUCCESS:
+            return { ...state, ...payload, grError: false };
+        case GROUPS_POINTS_FAILURE:
             return { ...state, ...payload, grError: true };
 
         case GROUP_REQUEST:

@@ -68,12 +68,12 @@ class TournamentPage extends React.Component {
 
                                     {
                                         tour.organizer.login === this.props.userProfile.login ?
-                                            <Button variant="info" disabled={ Date.parse(tour.dateFinish) < this.date} href={TOUR_ORGANIZER_PANEL_LINK + tour.id}>
+                                            <Button variant="info" href={TOUR_ORGANIZER_PANEL_LINK + tour.id}>
                                                 {
                                                     <div>Редактировать</div>
                                                 }
                                             </Button> :
-                                            <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || !this.props.isAuth} onClick={()=>this.onParticipate(tour.id)}>
+                                            <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || Date.parse(tour.dateFinish) < this.date || !this.props.isAuth} onClick={()=>this.onParticipate(tour.id)}>
                                                 {
                                                     Date.parse(tour.dateFinishReg) < this.date ? <div>Регистрация завершена</div> :
                                                         this.props.isAuth? <div>Участвовать</div>

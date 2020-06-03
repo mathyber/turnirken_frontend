@@ -93,7 +93,7 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
-                <Card.Header as="h4">{this.state.grid ? <div>"Создание схемы турнира" {this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}</div>: "Схема турнира"}</Card.Header>
+                <Card.Header as="h4">{this.state.grid ? <div>Создание схемы турнира "{this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}"</div>: "Схема турнира"}</Card.Header>
                 {
                     this.props.getErrorGrid ?
                         <Alert style={{margin: "15px"}} key="1" variant="danger">

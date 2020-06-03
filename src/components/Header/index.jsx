@@ -39,7 +39,6 @@ class Header extends React.Component {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="mr-auto">
                             <Nav.Link href={TOURNAMENTS_LINK}>Турниры</Nav.Link>
-                            <Nav.Link href="#pricing">222</Nav.Link>
                         </Nav>
 
                         {

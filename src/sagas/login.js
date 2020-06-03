@@ -11,7 +11,7 @@ function* workerLogin({ payload, history }) {
         yield JwtHelper.saveToken(jwt);
        // yield console.log(postman.get("identity/userInfo"));
         yield put(actions.userLoginSuccess());
-        yield history.push('/');
+        yield history.push('/tournaments');
     } catch (e) {
         console.log(e);
         yield put(actions.userLoginFailure(e));

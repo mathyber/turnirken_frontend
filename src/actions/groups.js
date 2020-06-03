@@ -10,6 +10,10 @@ export const GROUPS_REQUEST = 'GROUPS_REQUEST';
 export const GROUPS_SUCCESS = 'GROUPS_SUCCESS';
 export const GROUPS_FAILURE = 'GROUPS_FAILURE';
 
+export const GROUPS_POINTS_REQUEST = 'GROUPS_POINTS_REQUEST';
+export const GROUPS_POINTS_SUCCESS = 'GROUPS_POINTS_SUCCESS';
+export const GROUPS_POINTS_FAILURE = 'GROUPS_POINTS_FAILURE';
+
 export const GROUP_REQUEST = 'GROUP_REQUEST';
 export const GROUP_SUCCESS = 'GROUP_SUCCESS';
 export const GROUP_FAILURE = 'GROUP_FAILURE';
@@ -59,6 +63,22 @@ export const groupsSuccess = (payload) => ({
 
 export const groupsFailure = payload => ({
     type: GROUPS_FAILURE,
+    payload
+});
+
+export const groupsPointsRequest = (payload, history) => ({
+    type: GROUPS_POINTS_REQUEST,
+    payload,
+    history
+});
+
+export const groupsPointsSuccess = (payload) => ({
+    type: GROUPS_POINTS_SUCCESS,
+    payload
+});
+
+export const groupsPointsFailure = payload => ({
+    type: GROUPS_POINTS_FAILURE,
     payload
 });
 

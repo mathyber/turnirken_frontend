@@ -3,7 +3,13 @@ import actions from '../actions';
 import JwtHelper from '../utils/jwtHelper';
 import { postman } from "../utils/postman";
 
-import {GROUP_REQUEST, GROUPS_ALL_REQUEST, GROUPS_REQUEST, GROUPS_SAVE_REQUEST} from "../actions/groups";
+import {
+    GROUP_REQUEST,
+    GROUPS_ALL_REQUEST,
+    GROUPS_POINTS_REQUEST,
+    GROUPS_REQUEST,
+    GROUPS_SAVE_REQUEST
+} from "../actions/groups";
 
 function* workerGroupAll({ payload, history }) {
     try {
@@ -50,9 +56,22 @@ function* workerGroupSave({ payload, history }) {
     }
 }
 
+
+function* workerGroupPoints({ payload, history }) {
+    try {
+        yield call(() => postman.post('/groups/getGroupsPoints', payload));
+        // yield console.log(groups);
+        yield put(actions.groupsPointsSuccess());
+    } catch (e) {
+        console.log(e);
+        yield put(actions.groupsPointsFailure(e));
+    }
+}
+
 export default function* watchReg() {
     yield takeLatest(GROUPS_ALL_REQUEST, workerGroupAll);
     yield takeLatest(GROUPS_SAVE_REQUEST, workerGroupSave);
     yield takeLatest(GROUPS_REQUEST, workerGroups);
+    yield takeLatest(GROUPS_POINTS_REQUEST, workerGroupPoints);
     yield takeLatest(GROUP_REQUEST, workerGroup);
 }
