@@ -6,6 +6,10 @@ export const MATCHES_REQUEST = 'MATCHES_REQUEST';
 export const MATCHES_SUCCESS = 'MATCHES_SUCCESS';
 export const MATCHES_FAILURE = 'MATCHES_FAILURE';
 
+export const MATCHES_GROUP_REQUEST = 'MATCHES_GROUP_REQUEST';
+export const MATCHES_GROUP_SUCCESS = 'MATCHES_GROUP_SUCCESS';
+export const MATCHES_GROUP_FAILURE = 'MATCHES_GROUP_FAILURE';
+
 export const MATCH_REQUEST = 'MATCH_REQUEST';
 export const MATCH_SUCCESS = 'MATCH_SUCCESS';
 export const MATCH_FAILURE = 'MATCH_FAILURE';
@@ -75,5 +79,20 @@ export const setMatchResultSuccess = (payload) => ({
 
 export const setMatchResultFailure = payload => ({
     type: SET_RESULT_MATCH_FAILURE,
+    payload
+});
+export const matchesGroupRequest = (payload, history) => ({
+    type: MATCHES_GROUP_REQUEST,
+    payload,
+    history
+});
+
+export const matchesGroupSuccess = (payload) => ({
+    type: MATCHES_GROUP_SUCCESS,
+    payload
+});
+
+export const matchesGroupFailure = payload => ({
+    type: MATCHES_GROUP_FAILURE,
     payload
 });

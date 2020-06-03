@@ -242,7 +242,7 @@ class TournamentOrganizerPanel extends React.Component {
                             <div style={{width: '30rem', height: "40rem", overflowY: "scroll"}}>
                                 {
                                     this.props.matchesTour.map(value => (
-                                            <Card className="card text-white bg-primary" bg={value.player1 ? value.player2 && "primary" : "secondary"}
+                                            <Card className="card text-white bg-primary" bg={value.finish===false? value.player1 ? value.player2 && "danger" : "secondary" : "primary"}
                                                   style={{margin: '10px', minWidth: "400px"}}
                                                   key={value.id}>
                                                 <Card.Header
@@ -287,8 +287,97 @@ class TournamentOrganizerPanel extends React.Component {
                                     )
                                 }</div>
                         </Card>
+
+                        <Card style={{margin: '12px', maxHeight: "50rem", width:"50rem"}}>
+                            <Card.Header as="h5">Группы турнира</Card.Header>
+                            <div style={{width: '50rem', height: "40rem", overflowY: "scroll"}}>
+                                {
+                                    this.props.groupsT.map(group => (
+                                        <Card className="card text-white bg-primary" style={{margin: '10px'}}
+                                              key={group.idGroup}>
+                                            <Card.Header as="h5">Группа {group.groupName} {group.finish===true&&"(игры в группе завершились)"}</Card.Header>
+                                            {
+                                                group.results && group.results.map(result => (
+                                                    <Card className="card text-white" bg={result.win==true? "success" :"primary"}  style={{margin: '5px'}} key={result.id}>
+                                                        {
+                                                            <CardGroup>
+                                                                <Card.Title style={{
+                                                                    margin: '5px',
+                                                                    padding: "5px"
+                                                                }}>
+                                                                    {
+                                                                        result.place
+                                                                    }
+                                                                </Card.Title>
+                                                                <Card className="card text-white bg-secondary" style={{
+                                                                    margin: '5px',
+                                                                    padding: "5px", maxWidth: '200px', minWidth: '200px',
+                                                                }}>
+                                                                    <b>{
+                                                                        result.part.login
+                                                                    }</b>
+                                                                </Card>
+                                                                <Card.Title style={{
+                                                                    margin: '5px',
+                                                                    padding: "5px", fontSize: "15px"
+                                                                }}>
+                                                                    {
+                                                                        "Победы: " + result.wins
+                                                                    }
+                                                                </Card.Title>
+                                                                <Card.Title style={{
+                                                                    margin: '5px',
+                                                                    padding: "5px", fontSize: "15px"
+                                                                }}>
+                                                                    {
+                                                                        "Ничьи: " + result.draw
+                                                                    }
+                                                                </Card.Title>
+                                                                <Card.Title style={{
+                                                                    margin: '5px',
+                                                                    padding: "5px", fontSize: "15px"
+                                                                }}>
+                                                                    {
+                                                                        "Поражения: " + result.losing
+                                                                    }
+                                                                </Card.Title>
+                                                                <Card.Title style={{
+                                                                margin: '5px',
+                                                                padding: "5px", fontSize: "15px", minWidth:"150px", textAlign:"center"
+                                                            }}>
+                                                                {
+                                                                    result.winPoints+" : " + result.losingPoints + " "
+                                                                }
+                                                                (
+                                                                    {
+                                                                        result.winPoints - result.losingPoints
+                                                                    }
+                                                                    )
+                                                            </Card.Title>
+                                                                <Card bg={"info"} style={{
+                                                                    margin: '5px',
+                                                                    padding: "5px", fontSize: "20px", maxWidth: "40px", textAlign:"center"
+                                                                }}>
+                                                                    {
+                                                                        result.points
+                                                                    }
+                                                                </Card>
+                                                            </CardGroup>
+                                                        }
+                                                    </Card>
+                                                ))
+                                            }
+                                            <Button onClick={() => this.props.history.push("/group/" + group.idGroup)}>Перейти
+                                                на страницу группы</Button>
+                                        </Card>
+                                        )
+                                    )
+                                }
+                            </div>
+                        </Card>
                     </Row>
                 </Card>
+
 
             </Card>
         )

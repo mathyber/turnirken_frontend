@@ -9,7 +9,11 @@ import {
     MATCH_SUCCESS,
     MATCH_FAILURE,
     SET_RESULT_MATCH_REQUEST,
-    SET_RESULT_MATCH_SUCCESS, SET_RESULT_MATCH_FAILURE
+    SET_RESULT_MATCH_SUCCESS,
+    SET_RESULT_MATCH_FAILURE,
+    MATCHES_GROUP_REQUEST,
+    MATCHES_GROUP_SUCCESS,
+    MATCHES_GROUP_FAILURE
 } from "../actions/matches";
 
 
@@ -17,7 +21,8 @@ const initialState = {
     matchesAll: [],
     grError: false,
     matchesTour: [],
-    matchT: {}
+    matchesGroup: [],
+    matchT: {},
 };
 
 export default function (state = initialState, { type, payload }) {
@@ -36,6 +41,12 @@ export default function (state = initialState, { type, payload }) {
         case MATCHES_FAILURE:
             return { ...state, ...payload, grError: true };
 
+        case MATCHES_GROUP_REQUEST:
+            return { ...state, ...payload };
+        case MATCHES_GROUP_SUCCESS:
+            return { ...state, ...payload, grError: false };
+        case MATCHES_GROUP_FAILURE:
+            return { ...state, ...payload, grError: true };
 
         case MATCH_REQUEST:
             return { ...state, ...payload };

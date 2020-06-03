@@ -3,7 +3,13 @@ import actions from '../actions';
 import JwtHelper from '../utils/jwtHelper';
 import { postman } from "../utils/postman";
 
-import {MATCH_REQUEST, MATCHES_ALL_REQUEST, MATCHES_REQUEST, SET_RESULT_MATCH_REQUEST} from "../actions/matches";
+import {
+    MATCH_REQUEST,
+    MATCHES_ALL_REQUEST,
+    MATCHES_GROUP_REQUEST,
+    MATCHES_REQUEST,
+    SET_RESULT_MATCH_REQUEST
+} from "../actions/matches";
 
 function* workerMatchAll({ payload, history }) {
     try {
@@ -41,6 +47,17 @@ function* workerMatches({ payload, history }) {
 }
 
 
+function* workerMatchesGroup({ payload, history }) {
+    try {
+        let m = yield call(() => postman.post('/matches/getMatchesGroup', {id:payload}));
+        yield console.log(m);
+        yield put(actions.matchesGroupSuccess({matchesGroup: m}));
+    } catch (e) {
+        console.log(e);
+        yield put(actions.matchesGroupFailure(e));
+    }
+}
+
 function* workerSetMatchResult({ payload, history }) {
     try {
         yield call(() => postman.post('/matches/setResult', payload));
@@ -55,6 +72,7 @@ function* workerSetMatchResult({ payload, history }) {
 export default function* watchReg() {
     yield takeLatest(MATCHES_ALL_REQUEST, workerMatchAll);
     yield takeLatest(MATCHES_REQUEST, workerMatches);
+    yield takeLatest(MATCHES_GROUP_REQUEST, workerMatchesGroup);
     yield takeLatest(MATCH_REQUEST, workerMatch);
     yield takeLatest(SET_RESULT_MATCH_REQUEST, workerSetMatchResult);
 }

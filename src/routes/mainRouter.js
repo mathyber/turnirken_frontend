@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    GRID_PAGE_LINK,
+    GRID_PAGE_LINK, GROUP_LINK,
     LOGIN_LINK, MATCH_LINK,
     PROFILE_LINK,
     REG_LINK,
@@ -18,6 +18,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./privateRoute";
 import JwtHelper from "../utils/jwtHelper";
 import MatchTour from "../containers/tournaments/match";
+import GroupTour from "../containers/tournaments/group";
 
 function MainRouter() {
     return (
@@ -31,6 +32,7 @@ function MainRouter() {
             <PrivateRoute path={TOURNAMENT_SETTINGS_LINK} component={TournamentSettings}/>
             <PrivateRoute path={TOURNAMENT_ORGANIZER_PANEL_LINK} component={TournamentOrg}/>
             <PrivateRoute path={MATCH_LINK} component={MatchTour}/>
+            <PrivateRoute path={GROUP_LINK} component={GroupTour}/>
             <PrivateRoute path={GRID_PAGE_LINK} />
         </Switch>
     );
