@@ -25,7 +25,6 @@ class TournamentOrganizerPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            err: false
         }
     }
 
@@ -33,6 +32,7 @@ class TournamentOrganizerPanel extends React.Component {
     componentDidMount() {
         this.props.tour(this.props.match.params.id);
         this.props.groups(this.props.match.params.id);
+        this.props.groupsTt(this.props.match.params.id);
         this.props.matches(this.props.match.params.id);
         this.props.matchesAllInTour(this.props.match.params.id);
         this.props.participants(this.props.match.params.id);
@@ -61,8 +61,8 @@ class TournamentOrganizerPanel extends React.Component {
         console.log(model);
         if (maap.length === this.props.tparticipants.length) {
             this.props.saveGM(model);
-            this.setState({err: false});
-        } else this.setState({err: true});
+           // this.setState({err: false});
+        }
     }
 
     onChangeInputGroup = (event) => {
@@ -242,7 +242,7 @@ class TournamentOrganizerPanel extends React.Component {
                             <div style={{width: '30rem', height: "40rem", overflowY: "scroll"}}>
                                 {
                                     this.props.matchesTour.map(value => (
-                                            <Card className="card text-white bg-primary"
+                                            <Card className="card text-white bg-primary" bg={value.player1 ? value.player2 && "primary" : "secondary"}
                                                   style={{margin: '10px', minWidth: "400px"}}
                                                   key={value.id}>
                                                 <Card.Header
@@ -302,6 +302,7 @@ const mapStateToProps = (state) => ({
     getErrorGrid: selectortour.getErrorGrid(state),
     userProfile: selector.getProfile(state),
     groupsAll: selectorgr.groupsAll(state),
+    groupsT: selectorgr.groupsT(state),
     matchesAll: selectorm.matchesAll(state),
     matchesTour: selectorm.matchesTour(state),
     // engine: state.engine
@@ -312,6 +313,7 @@ const mapDispatchToProps = dispatch =>
             tour: (id) => actions.tournamentIdRequest(id),
             participants: (id) => actions.tournamentPartsRequest(id),
             groups: (id) => actions.groupsAllRequest(id),
+            groupsTt: (id) => actions.groupsRequest(id),
             matches: (id) => actions.matchesAllRequest(id),
             matchesAllInTour: (id) => actions.matchesRequest(id),
             saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
