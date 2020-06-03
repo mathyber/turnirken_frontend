@@ -1,7 +1,7 @@
 import React from "react";
 import {
     GRID_PAGE_LINK,
-    LOGIN_LINK,
+    LOGIN_LINK, MATCH_LINK,
     PROFILE_LINK,
     REG_LINK,
     TOURNAMENT_CREATE_LINK, TOURNAMENT_ORGANIZER_PANEL_LINK,
@@ -17,6 +17,7 @@ import TournamentOrg from "../containers/tournaments/tounament_organizer_panel";
 import { Redirect, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./privateRoute";
 import JwtHelper from "../utils/jwtHelper";
+import MatchTour from "../containers/tournaments/match";
 
 function MainRouter() {
     return (
@@ -29,6 +30,7 @@ function MainRouter() {
             <PrivateRoute path={TOURNAMENT_CREATE_LINK} component={TournamentCreatePage}/>
             <PrivateRoute path={TOURNAMENT_SETTINGS_LINK} component={TournamentSettings}/>
             <PrivateRoute path={TOURNAMENT_ORGANIZER_PANEL_LINK} component={TournamentOrg}/>
+            <PrivateRoute path={MATCH_LINK} component={MatchTour}/>
             <PrivateRoute path={GRID_PAGE_LINK} />
         </Switch>
     );

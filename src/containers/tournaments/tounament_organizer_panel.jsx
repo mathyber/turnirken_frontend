@@ -11,18 +11,22 @@ import selectorgr from "../../selectors/groups";
 import selectorm from "../../selectors/matches";
 import selector from "../../selectors/userProfile";
 import Alert from "react-bootstrap/Alert";
-import {TOUR_SETTINGS_LINK} from "../../routes/link";
+import {REG_LINK, TOUR_SETTINGS_LINK} from "../../routes/link";
 import Col from "react-bootstrap/Col";
 import FormControl from "react-bootstrap/FormControl";
 import Row from "react-bootstrap/Row";
 import TournamentSettings from "./tounament_settings";
+import {FormRow} from "react-bootstrap";
+import CardGroup from "react-bootstrap/CardGroup";
 
 class TournamentOrganizerPanel extends React.Component {
     date = new Date();
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            err: false
+        }
     }
 
 
@@ -30,6 +34,7 @@ class TournamentOrganizerPanel extends React.Component {
         this.props.tour(this.props.match.params.id);
         this.props.groups(this.props.match.params.id);
         this.props.matches(this.props.match.params.id);
+        this.props.matchesAllInTour(this.props.match.params.id);
         this.props.participants(this.props.match.params.id);
     }
 
@@ -54,15 +59,17 @@ class TournamentOrganizerPanel extends React.Component {
         })
 
         console.log(model);
-        maap.length === this.props.tparticipants.length &&
-        this.props.saveGM(model);
+        if (maap.length === this.props.tparticipants.length) {
+            this.props.saveGM(model);
+            this.setState({err: false});
+        } else this.setState({err: true});
     }
 
     onChangeInputGroup = (event) => {
         const name = event.target.name;
         const value = event.target.value;
         this.setState({
-            [value]: { id: name, type: "group"}
+            [value]: {id: name, type: "group"}
         });
         console.log(this.state);
     };
@@ -71,7 +78,7 @@ class TournamentOrganizerPanel extends React.Component {
         const name = event.target.name;
         const value = event.target.value;
         this.setState({
-            [value]: { id: name, type: "match"}
+            [value]: {id: name, type: "match"}
         });
         console.log(this.state);
     };
@@ -83,7 +90,7 @@ class TournamentOrganizerPanel extends React.Component {
                 <Card.Header as="h4">Панель организатора турнира
                     "{this.props.tournament && this.props.tournament.tournamentName.name + " " + this.props.tournament.season}"</Card.Header>
                 {
-                    this.props.getErrorGrid ?
+                    this.props.getErrorGrid || this.state.err ?
                         <Alert style={{margin: "15px"}} key="1" variant="danger">
                             При сохранении произошла ошибка
                         </Alert> : this.props.getErrorGrid === false &&
@@ -110,25 +117,27 @@ class TournamentOrganizerPanel extends React.Component {
 
                 <Card style={{margin: '12px', padding: "15px"}}>
                     <Row>
-                        <Card style={{width: '15rem', margin: '12px', overflowY: "scroll"}}>
+                        <Card style={{margin: '12px'}}>
                             <Card.Header as="h5">Участники {this.state.num}</Card.Header>
-                            {
-                                this.props.tparticipants.map(part => (
-                                    part.id in this.state?
-                                        <Card className="card text-white bg-success"
-                                                                 style={{margin: '5px', padding: "5px"}}
-                                                                 key={part.id}>
-                                            {part.login ? part.login + " (выбран)" : "участника еще нет"}
-                                        </Card> :
-                                    <Card className="card text-white bg-primary"
-                                          style={{margin: '5px', padding: "5px"}}
-                                          key={part.id}>
-                                        {part.login ? part.login : "участника еще нет"}
-                                    </Card>)
-                                )
-                            }
-                        </Card>
+                            <div style={{width: '15rem', height: "40rem", overflowY: "scroll"}}>
 
+                                {
+                                    this.props.tparticipants.map(part => (
+                                        part.id in this.state ?
+                                            <Card className="card text-white bg-success"
+                                                  style={{margin: '5px', padding: "5px"}}
+                                                  key={part.id}>
+                                                {part.login ? part.login + " (выбран)" : "участника еще нет"}
+                                            </Card> :
+                                            <Card className="card text-white bg-primary"
+                                                  style={{margin: '5px', padding: "5px"}}
+                                                  key={part.id}>
+                                                {part.login ? part.login : "участника еще нет"}
+                                            </Card>)
+                                    )
+                                }
+                            </div>
+                        </Card>
                         <Card style={{margin: '12px'}}>
                             <Card.Header as="h5">Группы</Card.Header>
                             <div style={{width: '30rem', height: "40rem", overflowY: "scroll"}}>
@@ -155,8 +164,8 @@ class TournamentOrganizerPanel extends React.Component {
 
                                                                     {this.props.tparticipants.map(partic => (
                                                                         partic.login &&
-                                                                            <option key={partic.id}
-                                                                                    value={partic.id}>{partic.login}</option>
+                                                                        <option key={partic.id}
+                                                                                value={partic.id}>{partic.login}</option>
                                                                     ))}
 
                                                                 </FormControl> :
@@ -222,14 +231,66 @@ class TournamentOrganizerPanel extends React.Component {
 
 
                     </Row>
+
+                    <Button onClick={() => this.onClickSave()}>Сохранить</Button>
                 </Card>
 
-                <Button onClick={() => this.onClickSave()}>Сохранить</Button>
-
+                <Card style={{margin: '12px', padding: "15px"}}>
+                    <Row>
+                        <Card style={{margin: '12px', maxHeight: "50rem"}}>
+                            <Card.Header as="h5">Матчи турнира</Card.Header>
+                            <div style={{width: '30rem', height: "40rem", overflowY: "scroll"}}>
+                                {
+                                    this.props.matchesTour.map(value => (
+                                            <Card className="card text-white bg-primary"
+                                                  style={{margin: '10px', minWidth: "400px"}}
+                                                  key={value.id}>
+                                                <Card.Header
+                                                    as="h6">Стадия: {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}</Card.Header>
+                                                <CardGroup>
+                                                    <Card className="card text-white bg-secondary" style={{
+                                                        margin: '5px',
+                                                        padding: "5px",
+                                                        height: "30px",
+                                                        textAlign: "right",
+                                                        marginTop: "30px"
+                                                    }}>
+                                                        {
+                                                            value.player1 ? value.player1.login : "---"
+                                                        }
+                                                    </Card>
+                                                    <Card.Title className="text-center"
+                                                                style={{margin: '5px', padding: "5px", fontSize: "60px"}}>
+                                                        {
+                                                            value.player1 ? value.resPlayer1 : "0"
+                                                        }
+                                                        :
+                                                        {
+                                                            value.player2 ? value.resPlayer2 : "0"
+                                                        }
+                                                    </Card.Title>
+                                                    <Card className="card text-white bg-secondary" style={{
+                                                        margin: '5px',
+                                                        padding: "5px",
+                                                        height: "30px",
+                                                        marginTop: "30px"
+                                                    }}>
+                                                        {
+                                                            value.player2 ? value.player2.login : "---"
+                                                        }
+                                                    </Card>
+                                                </CardGroup>
+                                                <Button onClick={() => this.props.history.push("/match/" + value.id)}>Перейти
+                                                    на страницу матча</Button>
+                                            </Card>
+                                        )
+                                    )
+                                }</div>
+                        </Card>
+                    </Row>
+                </Card>
 
             </Card>
-
-
         )
     }
 }
@@ -242,6 +303,7 @@ const mapStateToProps = (state) => ({
     userProfile: selector.getProfile(state),
     groupsAll: selectorgr.groupsAll(state),
     matchesAll: selectorm.matchesAll(state),
+    matchesTour: selectorm.matchesTour(state),
     // engine: state.engine
 });
 
@@ -251,6 +313,7 @@ const mapDispatchToProps = dispatch =>
             participants: (id) => actions.tournamentPartsRequest(id),
             groups: (id) => actions.groupsAllRequest(id),
             matches: (id) => actions.matchesAllRequest(id),
+            matchesAllInTour: (id) => actions.matchesRequest(id),
             saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
             saveGM: (payload) => actions.groupsSaveRequest(payload),
         },

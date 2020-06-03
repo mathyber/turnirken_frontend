@@ -28,7 +28,7 @@ import Row from "react-bootstrap/Row";
 import CardGroup from "react-bootstrap/CardGroup";
 import Alert from "react-bootstrap/Alert";
 
-class TournamentSettings extends React.Component {
+class Tournament extends React.Component {
     date = new Date();
     engine = new SRD.DiagramEngine();
     model = new SRD.DiagramModel();
@@ -93,7 +93,7 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
-                <Card.Header as="h4">{this.state.grid ? <div>"Создание схемы турнира" {this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}</div>: "Схема турнира"}</Card.Header>
+                <Card.Header as="h4">Создание схемы турнира {this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}</Card.Header>
                 {
                     this.props.getErrorGrid ?
                         <Alert style={{margin: "15px"}} key="1" variant="danger">
@@ -181,4 +181,4 @@ const mapDispatchToProps = dispatch =>
 export default compose(
     withRouter,
     connect(mapStateToProps, mapDispatchToProps)
-)(TournamentSettings);
+)(Tournament);

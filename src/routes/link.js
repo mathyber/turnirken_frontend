@@ -8,3 +8,4 @@ export const TOURNAMENT_ORGANIZER_PANEL_LINK = "/tournament_organizer/:id";
 export const TOUR_ORGANIZER_PANEL_LINK = "/tournament_organizer/";
 export const TOUR_SETTINGS_LINK = "/tournament_settings/";
 export const GRID_PAGE_LINK = "/grid/:name";
+export const MATCH_LINK = "/match/:id";
