@@ -19,26 +19,50 @@ import JwtHelper from "../../utils/jwtHelper";
 import selectorreg from "../../selectors/registration";
 import selector from "../../selectors/userProfile";
 import Alert from "react-bootstrap/Alert";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 class TournamentPage extends React.Component {
     date = new Date();
 
     constructor(props) {
         super(props);
-        this.state ={
-            num: 0
+        this.state = {
+            num: 0,
+            search: "",
+            searchGame: ""
         }
     }
 
     componentDidMount() {
-        this.props.tours();
-     //   this.props.getUserProfile();
+        this.props.search({
+            str: ""
+        });
+        //   this.props.getUserProfile();
         // console.log(this.props.isAuth)
     }
 
-    onParticipate(id){
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.search !== this.state.search) {
+            this.props.search({
+                str: this.state.search
+            });
+        }
+        if (prevState.searchGame !== this.state.searchGame) {
+            this.props.searchGame({
+                str: this.state.searchGame
+            });
+        }
+    }
+
+    onParticipate(id) {
         this.setState({num: id})
         this.props.reg({id: id});
+    }
+
+    onChangeInput = (event) => {
+        this.setState({[event.target.name]: event.target.value})
     }
 
     render() {
@@ -53,38 +77,59 @@ class TournamentPage extends React.Component {
                         }
                     </Button>
                 </ButtonGroup>
-
+                <Row>
+                <Col style={{margin: '12px', marginRight: "0"}}>
+                <Form.Group  controlId="formBasicLogin">
+                    <Form.Control type="search" name="search" placeholder="поиск по названию турнира..."
+                                  onChange={this.onChangeInput}/>
+                </Form.Group>
+                </Col>
+                    <Col style={{margin: '12px', marginLeft: "0"}}>
+                <Form.Group  >
+                    <Form.Control type="search" name="searchGame" placeholder="поиск по названию игры..."
+                                  onChange={this.onChangeInput}/>
+                </Form.Group>
+                </Col>
+                </Row>
                 {
-                    this.props.tournaments.map(tour => {
-                        return (
-                            <Card className="card text-white bg-primary" style={{margin: '12px'}} key={tour.id}>
-                                <Card.Header as="h3"><b>{tour.tournamentName.name} {tour.season}</b></Card.Header>
-                                { tour.logo && <Card.Img style={{width: '100%', height: '20ex', objectFit: 'cover'}} variant="top" src={tour.logo}/>}
-                                <Card.Body>
-                                    <Card.Title><b>Игра: {tour.tournamentName.game.name}</b></Card.Title>
-                                    <Card.Text>
-                                        { tour.info && tour.info.slice(0, 200)+"..."}
-                                    </Card.Text>
+                    this.props.tournaments.length !== 0 ? this.props.tournaments.map(tour => {
+                            return (
+                                <Card className="card text-white bg-primary" style={{margin: '12px'}} key={tour.id}>
+                                    <Card.Header as="h3"><b>{tour.tournamentName} {tour.season}</b></Card.Header>
+                                    {tour.logo &&
+                                    <Card.Img style={{width: '100%', height: '20ex', objectFit: 'cover'}} variant="top"
+                                              src={tour.logo}/>}
+                                    <Card.Body>
+                                        <Card.Title><b>Игра: {tour.gameName}</b></Card.Title>
+                                        <Card.Text>
+                                            {tour.info && tour.info.slice(0, 200) + "..."}
+                                        </Card.Text>
 
-                                    {
-                                        tour.organizer.login === this.props.userProfile.login ?
-                                            <Button variant="info" href={TOUR_ORGANIZER_PANEL_LINK + tour.id}>
-                                                {
-                                                    <div>Редактировать</div>
-                                                }
-                                            </Button> :
-                                            <Button variant="light" disabled={ Date.parse(tour.dateFinishReg) < this.date || Date.parse(tour.dateFinish) < this.date || !this.props.isAuth} onClick={()=>this.onParticipate(tour.id)}>
-                                                {
-                                                    Date.parse(tour.dateFinishReg) < this.date ? <div>Регистрация завершена</div> :
-                                                        this.props.isAuth? <div>Участвовать</div>
-                                                            : <div>Войдите, чтобы участвовать</div>
-                                                }
-                                            </Button>
-                                    }
-                                </Card.Body>
-                            </Card>)
+                                        {
+                                            tour.organizer.login === this.props.userProfile.login ?
+                                                <Button variant="info" href={TOUR_ORGANIZER_PANEL_LINK + tour.id}>
+                                                    {
+                                                        <div>Редактировать</div>
+                                                    }
+                                                </Button> :
+                                                <Button variant="light"
+                                                        disabled={Date.parse(tour.dateFinishReg) < this.date || Date.parse(tour.dateFinish) < this.date || !this.props.isAuth}
+                                                        onClick={() => this.onParticipate(tour.id)}>
+                                                    {
+                                                        Date.parse(tour.dateFinishReg) < this.date ?
+                                                            <div>Регистрация завершена</div> :
+                                                            this.props.isAuth ? <div>Участвовать</div>
+                                                                : <div>Войдите, чтобы участвовать</div>
+                                                    }
+                                                </Button>
+                                        }
+                                    </Card.Body>
+                                </Card>)
 
-                    })
+                        }) :
+                        <Card className="card text-white bg-primary" style={{margin: '12px'}}>
+                            <Card.Header as="h3"><b>Турниров нет. Но скоро будут</b></Card.Header>
+                        </Card>
                 }
 
             </Card>
@@ -96,6 +141,7 @@ class TournamentPage extends React.Component {
 const mapStateToProps = state => ({
     isAuth: selectorauth.isAuth(state),
     tournaments: selectortour.getTours(state),
+    // tournamentsS: selectortour.getToursS(state),
     userProfile: selector.getProfile(state),
     regError: selectortour.getErrorReg(state),
 });
@@ -103,8 +149,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
             tours: () => actions.tournamentsAllRequest(),
+            search: (payload) => actions.tournamentSearchRequest(payload),
+            searchGame: (payload) => actions.tournamentSearchGameRequest(payload),
             reg: (payload) => actions.tournamentRegRequest(payload),
-         //   getUserProfile: () => dispatch(actions.userProfileRequest()),
+            //   getUserProfile: () => dispatch(actions.userProfileRequest()),
         },
         dispatch);
 

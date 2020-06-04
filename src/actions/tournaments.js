@@ -2,6 +2,11 @@ export const TOURNAMENTS_ALL_REQUEST = 'TOURNAMENTS_ALL_REQUEST';
 export const TOURNAMENTS_ALL_SUCCESS = 'TOURNAMENTS_ALL_SUCCESS';
 export const TOURNAMENTS_ALL_FAILURE = 'TOURNAMENTS_ALL_FAILURE';
 
+export const TOURNAMENTS_SEARCH_REQUEST = 'TOURNAMENTS_SEARCH_REQUEST';
+export const TOURNAMENTS_SEARCH_GAME_REQUEST = 'TOURNAMENTS_SEARCH_GAME_REQUEST';
+export const TOURNAMENTS_SEARCH_SUCCESS = 'TOURNAMENTS_SEARCH_SUCCESS';
+export const TOURNAMENTS_SEARCH_FAILURE = 'TOURNAMENTS_SEARCH_FAILURE';
+
 export const TOURNAMENT_ID_REQUEST = 'TOURNAMENT_ID_REQUEST';
 export const TOURNAMENT_ID_SUCCESS = 'TOURNAMENT_ID_SUCCESS';
 export const TOURNAMENT_ID_FAILURE = 'TOURNAMENT_ID_FAILURE';
@@ -41,8 +46,6 @@ export const tournamentsAllFailure = () => (
         type: TOURNAMENTS_ALL_FAILURE
     }
 );
-
-
 
 export const tournamentCreateRequest = (payload, history) => ({
     type: TOURNAMENT_CREATE_REQUEST,
@@ -120,5 +123,27 @@ export const tournamentPartsSuccess = (payload) => ({
 
 export const tournamentPartsFailure = payload => ({
     type: TOURNAMENT_PARTICIPANTS_FAILURE,
+    payload
+});
+
+export const tournamentSearchRequest = (payload, history) => ({
+    type: TOURNAMENTS_SEARCH_REQUEST,
+    payload,
+    history
+});
+
+export const tournamentSearchGameRequest = (payload, history) => ({
+    type: TOURNAMENTS_SEARCH_GAME_REQUEST,
+    payload,
+    history
+});
+
+export const tournamentSearchSuccess = (payload) => ({
+    type: TOURNAMENTS_SEARCH_SUCCESS,
+    payload
+});
+
+export const tournamentSearchFailure = payload => ({
+    type: TOURNAMENTS_SEARCH_FAILURE,
     payload
 });

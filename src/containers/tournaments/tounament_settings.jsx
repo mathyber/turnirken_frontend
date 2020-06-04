@@ -93,7 +93,7 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
-                <Card.Header as="h4">{this.state.grid ? <div>Создание схемы турнира "{this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}"</div>: "Схема турнира"}</Card.Header>
+                <Card.Header as="h4">{this.props.tournament ? this.props.tournament.dateStart ? "Схема турнира" : "Редактор схемы турнира" : ""}</Card.Header>
                 {
                     this.props.getErrorGrid ?
                         <Alert style={{margin: "15px"}} key="1" variant="danger">
@@ -105,7 +105,7 @@ class TournamentSettings extends React.Component {
                 }
 
                 {
-                    this.state.grid &&
+                    this.props.tournament ? this.props.tournament.dateStart==null &&
                     <Card.Body>
 
                     <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
@@ -149,11 +149,11 @@ class TournamentSettings extends React.Component {
                             }}>+место</Button></Col>
                     </Form.Group>
 
-                </Card.Body>}
+                </Card.Body> : ""}
 
                 <SRD.DiagramWidget diagramEngine={this.engine}/>
                 {
-                    this.state.grid && <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button>
+                    this.props.tournament ? this.props.tournament.dateStart==null && <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button> : ""
                 }
 
             </Card>

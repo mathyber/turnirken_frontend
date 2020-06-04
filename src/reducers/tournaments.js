@@ -16,7 +16,7 @@ import {
     TOURNAMENT_SAVE_GRID_SUCCESS,
     TOURNAMENTS_ALL_FAILURE,
     TOURNAMENTS_ALL_REQUEST,
-    TOURNAMENTS_ALL_SUCCESS
+    TOURNAMENTS_ALL_SUCCESS, TOURNAMENTS_SEARCH_FAILURE, TOURNAMENTS_SEARCH_REQUEST, TOURNAMENTS_SEARCH_SUCCESS
 } from "../actions/tournaments";
 
 const initialState = {
@@ -26,7 +26,7 @@ const initialState = {
     createError: null,
     gridError: null,
     regError: null,
-    pError: null
+    pError: null,
 };
 
 export default function (state = initialState, { type, payload }) {
@@ -36,6 +36,13 @@ export default function (state = initialState, { type, payload }) {
         case TOURNAMENTS_ALL_SUCCESS:
             return { ...state, ...payload };
         case TOURNAMENTS_ALL_FAILURE:
+            return { ...state };
+
+        case TOURNAMENTS_SEARCH_REQUEST:
+            return { ...state, ...payload };
+        case TOURNAMENTS_SEARCH_SUCCESS:
+            return { ...state, ...payload };
+        case TOURNAMENTS_SEARCH_FAILURE:
             return { ...state };
 
         case TOURNAMENT_ID_REQUEST:

@@ -8,12 +8,15 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import selectorgr from "../../selectors/groups";
 import FormControl from "react-bootstrap/FormControl";
+import Col from "react-bootstrap/Col";
 
 class GroupSettings extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            allGroups: false
+        }
 
     }
 
@@ -39,6 +42,11 @@ class GroupSettings extends React.Component {
         });
     };
 
+    onChangeCheck = () => {
+        this.setState({
+            allGroups: !this.state.allGroups,
+        });
+    };
 
     render() {
         console.log(this.state);
@@ -64,14 +72,22 @@ class GroupSettings extends React.Component {
                         <FormControl
                             name="idGroup" as="select"
                             onChange={this.onChangeInput}>
-                            <option value={"..."}>Выбрать группу...</option>
-
                             {this.props.groupsT.map(group => (
                                 <option key={group}
-                                        value={group.idGroup}>{group.groupName}</option>
+                                        value={group.idGroup}>Группа {group.groupName}</option>
                             ))}
 
                         </FormControl>
+                        <Col>
+                            <Form.Check
+                                type="checkbox"
+                                label="Для всех групп турнира"
+                                name="allGroups"
+                                id="1111111"
+                                onChange={this.onChangeCheck}
+
+                            />
+                        </Col>
                     </Form.Group>
                 </Card>
                 <Button onClick={() => {

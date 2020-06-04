@@ -88,16 +88,7 @@ class TournamentOrganizerPanel extends React.Component {
         return (
             <Card style={{margin: '12px'}}>
                 <Card.Header as="h4">Панель организатора турнира
-                    "{this.props.tournament && this.props.tournament.tournamentName.name + " " + this.props.tournament.season}"</Card.Header>
-                {
-                    this.props.getErrorGrid || this.state.err ?
-                        <Alert style={{margin: "15px"}} key="1" variant="danger">
-                            При сохранении произошла ошибка
-                        </Alert> : this.props.getErrorGrid === false &&
-                        <Alert style={{margin: "15px"}} key="2" variant="success">
-                            Сохранено
-                        </Alert>
-                }
+                    "{this.props.tournament && this.props.tournament.tournamentName + " " + this.props.tournament.season}"</Card.Header>
 
                 {this.props.tournament &&
                 <Card className="card text-white bg-primary" style={{margin: '12px'}}>
@@ -105,7 +96,7 @@ class TournamentOrganizerPanel extends React.Component {
                     <Card.Img style={{width: '100%', height: '20ex', objectFit: 'cover'}} variant="top"
                               src={this.props.tournament.logo}/>}
                     <Card.Body>
-                        <Card.Title><b>Игра: {this.props.tournament.tournamentName.game.name}</b></Card.Title>
+                        <Card.Title><b>Игра: {this.props.tournament.gameName}</b></Card.Title>
                         <Card.Text>
                             {this.props.tournament.info && this.props.tournament.info}
                         </Card.Text>

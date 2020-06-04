@@ -6,7 +6,7 @@ import {
     TOURNAMENT_CREATE_REQUEST,
     TOURNAMENT_ID_REQUEST, TOURNAMENT_PARTICIPANTS_REQUEST, TOURNAMENT_REG_REQUEST,
     TOURNAMENT_SAVE_GRID_REQUEST,
-    TOURNAMENTS_ALL_REQUEST
+    TOURNAMENTS_ALL_REQUEST, TOURNAMENTS_SEARCH_GAME_REQUEST, TOURNAMENTS_SEARCH_REQUEST
 } from "../actions/tournaments";
 import {TOURNAMENT_SETTINGS_LINK} from "../routes/link";
 
@@ -19,6 +19,34 @@ function* workerToursAll() {
     } catch (e) {
         console.log(e);
         yield put(actions.tournamentsAllFailure(e));
+    }
+}
+
+function* workerToursSearch({payload}) {
+    try {
+        yield setAccessToken(JwtHelper.token);
+        const tours = yield call(() => postman.post("/tournaments/searchTournaments", payload ));
+      //  const tours1 = yield call(() => postman.post("/tournaments/searchTournamentsNameGame", payload ));
+      //  console.log(tours);
+        yield put(actions.tournamentSearchSuccess({ tournaments: tours }));
+      //  yield put(actions.tournamentSearchSuccess({ tournaments: tours1 }));
+    } catch (e) {
+        console.log(e);
+        yield put(actions.tournamentSearchFailure(e));
+    }
+}
+
+function* workerToursSearchGame({payload}) {
+    try {
+        yield setAccessToken(JwtHelper.token);
+       // const tours = yield call(() => postman.post("/tournaments/searchTournaments", payload ));
+          const tours = yield call(() => postman.post("/tournaments/searchTournamentsNameGame", payload ));
+        //  console.log(tours);
+        yield put(actions.tournamentSearchSuccess({ tournaments: tours }));
+        //  yield put(actions.tournamentSearchSuccess({ tournaments: tours1 }));
+    } catch (e) {
+        console.log(e);
+        yield put(actions.tournamentSearchFailure(e));
     }
 }
 
@@ -39,7 +67,7 @@ function* workerTourCreate({ payload, history }) {
         let {id} = yield call(() => postman.post('/tournaments/createTournament', payload));
       //  yield console.log(tour);
         yield put(actions.tournamentCreateSuccess());
-        yield history.push("/tournament_settings/"+id);
+        yield history.push("/tournament_organizer/"+id);
     } catch (e) {
         console.log(e);
         yield put(actions.tournamentCreateFailure(e));
@@ -86,6 +114,8 @@ function* workerTourParticipants({ payload }) {
 
 export default function* watchToursAll() {
     yield takeLatest(TOURNAMENTS_ALL_REQUEST, workerToursAll)
+    yield takeLatest(TOURNAMENTS_SEARCH_REQUEST, workerToursSearch)
+    yield takeLatest(TOURNAMENTS_SEARCH_GAME_REQUEST, workerToursSearchGame)
     yield takeLatest(TOURNAMENT_CREATE_REQUEST, workerTourCreate)
     yield takeLatest(TOURNAMENT_SAVE_GRID_REQUEST, workerTourGrid)
     yield takeLatest(TOURNAMENT_ID_REQUEST, workerTourId)
