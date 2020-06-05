@@ -56,7 +56,7 @@ class RegForm extends React.Component{
 render(){
     return (
 
-        <Card style={{ width: '25rem', margin: '12px' }}>
+        <Card style={{ width: 'auto', margin: '12px' }}>
             <Card.Header as="h5">Регистрация</Card.Header>
             <Card.Body>
                 <Form onSubmit={this.onSubmit}>
@@ -66,7 +66,7 @@ render(){
                             Логин или e-mail занят
                         </Alert> : this.props.regError===false &&
                             <Alert key="1" variant="success">
-                                Вы успешно зарегистрированы, перейдите на <a href={LOGIN_LINK}>страницу входа</a>
+                                Вы успешно зарегистрированы, теперь вы можете <a href={LOGIN_LINK}> войти</a>
                             </Alert>
                     }
                     <Form.Group controlId="formBasicLogin">
