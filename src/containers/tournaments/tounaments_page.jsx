@@ -38,7 +38,7 @@ class TournamentPage extends React.Component {
             searchGame: "",
             page: 0,
             pageG: 0,
-            e: true
+            e: true,
         }
     }
 
@@ -63,6 +63,17 @@ class TournamentPage extends React.Component {
                 str: this.state.searchGame, page: 0
             });
         }
+        if(prevState.num !== this.state.num ){
+            if (this.state.e) {
+                this.props.search({
+                    str: this.state.search, page: this.state.page
+                });
+            } else {
+                this.props.searchGame({
+                    str: this.state.searchGame, page: this.state.pageG
+                });
+            }
+        }
     }
 
     onClick() {
@@ -77,6 +88,7 @@ class TournamentPage extends React.Component {
             });
             this.setState({pageG: this.state.pageG + 1});
         }
+
         window.scrollTo(0, 0);
     }
 
@@ -97,17 +109,17 @@ class TournamentPage extends React.Component {
 
     date(str) {
         let date = new Date(str);
-        return date.toLocaleDateString();
+        return date.toLocaleString();
     }
 
     buttonStr(tour) {
-        if (Date.parse(tour.dateFinish).toLocaleString() < this.date1) return "Турнир завершен";
+        if (Date.parse(tour.dateFinish) < this.date1) return "Турнир завершен";
         else {
-            if (Date.parse(tour.dateFinishReg).toLocaleString() < this.date1) return "Регистрация завершена";
+            if (Date.parse(tour.dateFinishReg) < this.date1) return "Регистрация завершена";
             else {
-                if (Date.parse(tour.dateStart).toLocaleString() < this.date1) return "Турнир уже идет";
+                if (Date.parse(tour.dateStart) < this.date1) return "Турнир уже идет";
                 else {
-                    if (Date.parse(tour.dateStartReg).toLocaleString() > this.date1) return "Регистрация на турнир не началась";
+                    if (Date.parse(tour.dateStartReg) > this.date1) return "Регистрация на турнир не началась";
                     else {
                         if (this.props.isAuth) {
                             if (!tour.userReg) return "Участвовать";

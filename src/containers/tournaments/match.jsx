@@ -23,7 +23,7 @@ class MatchTour extends React.Component {
         this.state = {
             click: false,
             finish: false,
-            info: "info"
+            info: ""
         }
 
 
@@ -36,16 +36,38 @@ class MatchTour extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
+        if(prevState != this.state)
+     this.props.matchT(this.props.match.params.id);
+
+    }
+
+    disabledButton(){
+        if (this.props.isAuth) {
+            if(!this.props.matchTt.finish &&
+                (this.props.matchTt.player1.user_id === this.props.userProfile.id ||
+                this.props.matchTt.player2.user_id === this.props.userProfile.id ||
+                this.props.userProfile.id === this.props.matchTt.tournament.idOrg) ) return false;
+               else return true;
+        }
+        return true;
+    }
+
+    date(str) {
+        let date = new Date(str);
+        return date.toLocaleString();
     }
 
     onClick() {
+
         this.props.setRes({
             finish: this.state.finish,
             idMatch: this.props.matchTt.id,
             info: this.state.info,
             meRes: this.state.meRes,
             player2Res: this.state.player2Res
-        })
+        });
+        this.setState({info: " "})
+
     }
 
     onChangeInput = (event) => {
@@ -62,11 +84,29 @@ class MatchTour extends React.Component {
         });
     };
 
+    resCreator(num) {
+        switch (num) {
+            case 1:
+                return this.props.matchTt.player1.login;
+            case 2:
+                return this.props.matchTt.player2.login;
+            case 0:
+                return "Организатор";
+            default:
+                return "Какой-то непонятный челек мы не знаем кто это";
+        }
+    }
+
     render() {
         console.log(this.state);
+     //
         return (
-            <Card style={{margin: '12px'}}>
+            <Card style={{margin: '12px', marginRight: '5%', marginLeft: '5%'}}>
                 <Card.Header as="h4">Матч</Card.Header>
+                {this.props.matchTt.tournament && <Card className="card text-white bg-primary" style={{margin: '10px', minWidth: "400px"}}>
+                    <Button style={{fontSize:"20px"}} onClick={() => this.props.history.push("/tournament/" + this.props.matchTt.tournament.id)}>Матч в рамках
+                        турнира <b>"{this.props.matchTt.tournament.name + " " + this.props.matchTt.tournament.season}"</b></Button>
+                </Card>}
                 <Card className="card text-white bg-primary" style={{margin: '10px', minWidth: "400px"}}>
                     <Card.Header
                         as="h6">Стадия: {this.props.matchTt.playoffStage ? this.props.matchTt.playoffStage : this.props.matchTt.groupName && "Группа " + this.props.matchTt.groupName + ", тур " + this.props.matchTt.round}</Card.Header>
@@ -76,13 +116,13 @@ class MatchTour extends React.Component {
                             padding: "5px",
                             height: "30px",
                             textAlign: "right",
-                            marginTop: "30px"
+                            marginTop: "50px",
                         }}>
                             {
                                 this.props.matchTt.player1 ? this.props.matchTt.player1.login : "---"
                             }
                         </Card>
-                        <Card.Title className="text-center" style={{margin: '5px', padding: "5px", fontSize: "60px"}}>
+                        <Card.Title className="text-center" style={{margin: '5px', padding: "5px", fontSize: "90px"}}>
                             {
                                 this.props.matchTt.player1 ? this.props.matchTt.resPlayer1 : "0"
                             }
@@ -92,7 +132,7 @@ class MatchTour extends React.Component {
                             }
                         </Card.Title>
                         <Card className="card text-white bg-secondary"
-                              style={{margin: '5px', padding: "5px", height: "30px", marginTop: "30px"}}>
+                              style={{margin: '5px', padding: "5px", height: "30px", marginTop: "50px"}}>
                             {
                                 this.props.matchTt.player2 ? this.props.matchTt.player2.login : "---"
                             }
@@ -101,19 +141,20 @@ class MatchTour extends React.Component {
 
                     {
                         this.props.matchTt.player1 && this.props.matchTt.player2 ?
-                        <Button disabled={this.props.matchTt.finish} onClick={() => this.setState({click: !this.state.click})}>{this.props.matchTt.finish? "Матч завершен" :"Установить счет"}</Button>
-                        :   <Alert style={{margin: "15px"}} key="2" variant="primary">
+                            <Button disabled={this.disabledButton()}
+                                    onClick={() => this.setState({click: !this.state.click})}>{this.props.matchTt.finish ? "Матч завершен" : "Установить счет"}</Button>
+                            : <Alert style={{margin: "15px"}} key="2" variant="primary">
                                 В этом матче еще не известны все участники
                             </Alert>
                     }
-
 
 
                 </Card>
                 {
                     this.state.click &&
                     <Card style={{padding: "15px", margin: "15px"}}>
-                        <Card.Body>
+                        <Form> <Card.Body>
+
                             <Form.Group as={Row} controlId="exampleForm.SelectCustom">
 
                                 <Form.Label column
@@ -147,9 +188,32 @@ class MatchTour extends React.Component {
                             </Col>
 
                         </Card.Body>
-                        <Button size="sm" onClick={() => this.onClick()}>отправить</Button>
+                            <Button style={{width: "100%"}} onClick={() =>
+                                this.onClick()} size="sm">отправить</Button></Form>
                     </Card>
                 }
+
+                <Alert style={{margin: '10px', padding: "10px", minWidth: "400px"}} variant={"info"}>
+                    Счет отображается на табло, когда оба игрока установят одинаковый счет или если он будет установлен
+                    организатором турнира. Матч завершается, когда оба игрока установили одинаковый финальный счет или
+                    его установил организатор.
+                </Alert>
+
+                <Card style={{margin: '10px', maxHeight: "40rem", overflowY: "scroll"}}>
+                    {
+                        this.props.matchTt.story && this.props.matchTt.story.map(res => (
+                            <Card className="card" bg={"light"}
+                                  style={{margin: '10px', padding: "10px", minWidth: "400px"}} key={res.id}>
+                                <Card.Text>
+                                    {this.date(res.date)}: <b>{this.resCreator(res.resCreator)}</b> установил {res.finish && "финальный"} счет <b>{res.resPlayer1}:{res.resPlayer2}</b>
+                                </Card.Text>
+                                <Card.Text>
+                                    <b>Информация:</b> {res.info !== "" ? res.info : "нет"}
+                                </Card.Text>
+                            </Card>
+                        ))
+                    }
+                </Card>
 
             </Card>
 

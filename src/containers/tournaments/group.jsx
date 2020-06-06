@@ -30,7 +30,7 @@ class GroupTour extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
+        //    if(this.props.groupTt.results != prevProps.groupTt.results) this.props.groupT(this.props.match.params.id);
     }
 
     onClick() {
@@ -39,8 +39,13 @@ class GroupTour extends React.Component {
     render() {
         console.log(this.props);
         return (
-            <Card style={{margin: '12px'}}>
+            <Card style={{margin: '12px', marginRight: '5%', marginLeft: '5%'}}>
                 <Card.Header as="h4">Группа {this.props.groupTt.groupName} {this.props.groupTt.finish===true&&"(игры в группе завершились)"}</Card.Header>
+                {this.props.matchesGr.length!=0 && <Card className="card text-white bg-primary" style={{margin: '10px', minWidth: "400px"}}>
+                    <Button style={{fontSize:"20px"}} onClick={() => this.props.history.push("/tournament/" + this.props.matchTt.tournament.id)}>
+                        Группа турнира <b>"{this.props.matchesGr[0].tournament.name + " " + this.props.matchesGr[0].tournament.season}"</b></Button>
+                </Card>}
+
                 <Card className="card text-white bg-primary" style={{margin: '10px', minWidth: "400px"}} key={this.props.groupTt.idGroup}>
                         {
                             this.props.groupTt.results && this.props.groupTt.results.map(result => (
@@ -115,13 +120,14 @@ class GroupTour extends React.Component {
                         }
            
                 </Card>
-                <Card style={{margin: '12px', minWidth: "400px"}}>
-                    <Card.Header as="h5">Матчи группы </Card.Header>
-                    <div style={{minWidth: "400px", height: "40rem", overflowY: "scroll"}}>
+
+                <Card style={{margin: '12px'}}>
+                    <Card.Header as="h5">Матчи группы</Card.Header>
+                    <div className="d-flex flex-wrap justify-content-around" style={{ maxHeight: "40rem", overflowY: "scroll"}}>
                         {
                             this.props.matchesGr.map(value => (
                                     <Card className="card text-white bg-primary" bg={ value.finish===false? value.player1 ? value.player2 && "danger" : "secondary" : "primary" }
-                                          style={{margin: '10px', minWidth: "400px"}}
+                                          style={{margin: '10px', minWidth: "400px", maxHeight:"176px"}}
                                           key={value.id}>
                                         <Card.Header
                                             as="h6">Стадия: {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}

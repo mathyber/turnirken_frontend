@@ -60,14 +60,14 @@ class TournamentCreatePage extends React.Component {
                         <Form onSubmit={this.onSubmit}>
                             <Form.Group controlId="formBasicLogin">
                                 <Form.Label>Название турнира</Form.Label>
-                                <Form.Control type="text" name="name" onChange={this.onChangeInput}
+                                <Form.Control  type="text" name="name" onChange={this.onChangeInput}
                                               required/>
                             </Form.Group>
 
                             <Form.Group controlId="exampleForm.SelectCustom">
                                 <Form.Label>Сезон</Form.Label>
                                 <Form.Control type="text" name="season" onChange={this.onChangeInput}
-                                              required/>
+                                              />
                             </Form.Group>
 
                             <Form.Group controlId="exampleForm.SelectCustom">

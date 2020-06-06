@@ -76,6 +76,9 @@ class TournamentOrganizerPanel extends React.Component {
         } else {
             this.setState({err: true});
         }
+        this.props.tour(this.props.match.params.id);
+        this.props.groupsTt(this.props.match.params.id);
+        this.props.matchesAllInTour(this.props.match.params.id);
     }
 
     onChangeInputGroup = (event) => {
@@ -154,7 +157,7 @@ class TournamentOrganizerPanel extends React.Component {
                         <Card style={{margin: '12px', width:"30%"}}>
                             <Card.Header as="h5">Группы</Card.Header>
                             <div style={{height:"30rem",  overflowY: "scroll"}}>
-                                <GroupSettings/>
+                                { this.props.groupsAll.length>0&& <GroupSettings/>}
                                 {
                                     this.props.groupsAll.map(group => (
                                         <Card className="card text-white bg-primary" style={{margin: '10px'}}
@@ -255,7 +258,7 @@ class TournamentOrganizerPanel extends React.Component {
                                 </Alert>
                         }
 
-                        <Button style={{margin: "15px", width: "100%"}} onClick={() => this.onClickSave()}>Сохранить</Button>
+                        <Button disabled={this.props.tournament && this.props.tournament.dateStart!=null} style={{margin: "15px", width: "100%"}} onClick={() => this.onClickSave()}>Объявить старт турнира</Button>
 
                     </div>
 

@@ -78,6 +78,9 @@ class TournamentSettings extends React.Component {
             groups: tTG.default(this.model.serializeDiagram()).groups,
             id: this.props.match.params.id
         })
+        this.props.tour(this.props.match.params.id);
+       // this.props.groupsTt(this.props.match.params.id);
+      //  this.props.matchesAllInTour(this.props.match.params.id);
     }
 
     onClickSaveGrid() {
@@ -87,6 +90,9 @@ class TournamentSettings extends React.Component {
             grid: JSON.stringify(this.model.serializeDiagram()),
             id: this.props.match.params.id
         })
+        this.props.tour(this.props.match.params.id);
+    //    this.props.groupsTt(this.props.match.params.id);
+     //   this.props.matchesAllInTour(this.props.match.params.id);
     }
 
     onChangeInput = (event) => {
@@ -104,19 +110,11 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
-                <Card.Header as="h4">{this.props.tournament ? this.props.tournament.dateStart ? "Схема турнира" : "Редактор схемы турнира" : ""}</Card.Header>
-                {
-                    this.props.getErrorGrid ?
-                        <Alert style={{margin: "15px"}} key="1" variant="danger">
-                            При сохранении произошла ошибка
-                        </Alert> : this.props.getErrorGrid===false &&
-                        <Alert style={{margin: "15px"}} key="2" variant="success">
-                            Сохранено
-                        </Alert>
-                }
+                <Card.Header as="h4">{this.props.tournament ? this.props.tournament.dateFinishReg ? "Схема турнира" : "Редактор схемы турнира" : ""}</Card.Header>
+
 
                 {
-                    this.props.tournament ? this.props.tournament.dateStart==null &&
+                    this.props.tournament ? this.props.tournament.dateFinishReg==null &&
                     <Card.Body>
 
                     <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
@@ -152,7 +150,7 @@ class TournamentSettings extends React.Component {
                                 <option>1/32</option>
                                 <option>1/64</option>
                                 <option>1/128</option>
-                                <option>Прочее</option>
+                                <option>Другое</option>
                             </Form.Control>
                         </Col>
                         <Col sm={1}>
@@ -174,7 +172,16 @@ class TournamentSettings extends React.Component {
 
                 <SRD.DiagramWidget diagramEngine={this.engine}/>
                 {
-                    this.props.tournament ? this.props.tournament.dateStart==null && <Card>
+                    this.props.getErrorGrid ?
+                        <Alert style={{margin: "15px"}} key="1" variant="danger">
+                            При сохранении произошла ошибка
+                        </Alert> : this.props.getErrorGrid===false &&
+                        <Alert style={{margin: "15px"}} key="2" variant="success">
+                            Сохранено
+                        </Alert>
+                }
+                {
+                    this.props.tournament ? this.props.tournament.dateFinishReg==null && <Card>
                         <Button style={{margin: '12px'}} onClick={() => this.onClickSaveGrid()}>Сохранить предварительную версию схемы</Button>
                         <Button style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы</Button>
                     </Card>
