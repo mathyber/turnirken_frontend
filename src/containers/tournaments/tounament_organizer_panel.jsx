@@ -21,11 +21,16 @@ import CardGroup from "react-bootstrap/CardGroup";
 import GroupSettings from "./tounament_group_set";
 
 class TournamentOrganizerPanel extends React.Component {
-    date = new Date();
+    date1 = new Date();
 
     constructor(props) {
         super(props);
         this.state = {}
+    }
+
+    date(str) {
+        let date = new Date(str);
+        return date.toLocaleDateString();
     }
 
 
@@ -86,6 +91,7 @@ class TournamentOrganizerPanel extends React.Component {
     render() {
         console.log(this.props);
         return (
+            <div style={{marginRight: '5%', marginLeft: '5%'}}>
             <Card style={{margin: '12px'}}>
                 <Card.Header as="h4">Панель организатора турнира
                     "{this.props.tournament && this.props.tournament.tournamentName + " " + this.props.tournament.season}"</Card.Header>
@@ -97,6 +103,13 @@ class TournamentOrganizerPanel extends React.Component {
                               src={this.props.tournament.logo}/>}
                     <Card.Body>
                         <Card.Title><b>Игра: {this.props.tournament.gameName}</b></Card.Title>
+                        <Card.Title>Участников: {this.props.tournament.participants}/{this.props.tournament.maxParticipants},
+                            организатор: {this.props.tournament.organizer.login}, регистрация на
+                            участие: {this.date(this.props.tournament.dateStartReg)}
+                            {
+                                this.props.tournament.dateFinishReg != null ? <> - {this.date(this.props.tournament.dateFinishReg)}</> : Date.parse(this.props.tournament.dateStartReg)>this.date1 ?  " - ?" : " - н.в."
+                            }
+                        </Card.Title>
                         <Card.Text>
                             {this.props.tournament.info && this.props.tournament.info}
                         </Card.Text>
@@ -370,6 +383,7 @@ class TournamentOrganizerPanel extends React.Component {
                                                         </Card>
                                                     ))
                                                 }
+                                                <Card style={{margin: '5px', padding:'5px'}} className="card text-white bg-primary"> Очки за победу: {group.numWin}, очки за ничью: {group.numDraw}  </Card>
                                                 <Button onClick={() => this.props.history.push("/group/" + group.idGroup)}>Перейти
                                                     на страницу группы</Button>
                                             </Card>
@@ -383,6 +397,7 @@ class TournamentOrganizerPanel extends React.Component {
 
 
             </Card>
+            </div>
         )
     }
 }

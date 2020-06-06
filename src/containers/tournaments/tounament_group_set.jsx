@@ -29,6 +29,7 @@ class GroupSettings extends React.Component {
     }
 
     onClickSave() {
+
         this.props.save({
             ...this.state
         })
@@ -40,6 +41,10 @@ class GroupSettings extends React.Component {
         this.setState({
             [name]: value,
         });
+        if (this.props.groupsT.length === 1) {
+            let t = this.props.groupsT.pop();
+            this.setState({idGroup: t.idGroup });
+        }
     };
 
     onChangeCheck = () => {
@@ -54,16 +59,16 @@ class GroupSettings extends React.Component {
         return (
             <Card className="card text-white bg-primary" style={{margin: '10px'}}
                   key={this.props.groupsT.id}>
-                <Card.Header as="h5">Баллы в группе {this.props.groupsT.groupName}</Card.Header>
+                <Card.Header as="h5">Очки в группе {this.props.groupsT.groupName}</Card.Header>
                 <Card className="card text-white bg-primary" style={{padding: '15px'}}>
                     <Form.Group controlId="formw">
-                        <Form.Label>Баллы за победу:</Form.Label>
+                        <Form.Label>Очки за победу:</Form.Label>
                         <Form.Control type="number" name="numWin"
                                       onChange={this.onChangeInput}/>
                     </Form.Group>
 
                     <Form.Group controlId="formd">
-                        <Form.Label>Баллы за ничью:</Form.Label>
+                        <Form.Label>Очки за ничью:</Form.Label>
                         <Form.Control type="number" name="numDraw"
                                       onChange={this.onChangeInput}/>
                     </Form.Group>
@@ -72,6 +77,7 @@ class GroupSettings extends React.Component {
                         <FormControl
                             name="idGroup" as="select"
                             onChange={this.onChangeInput}>
+
                             {this.props.groupsT.map(group => (
                                 <option key={group}
                                         value={group.idGroup}>Группа {group.groupName}</option>

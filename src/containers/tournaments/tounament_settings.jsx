@@ -50,6 +50,7 @@ class TournamentSettings extends React.Component {
 
     componentDidMount() {
         this.props.tour(this.props.match.params.id);
+        this.props.participants(this.props.match.params.id);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -153,7 +154,7 @@ class TournamentSettings extends React.Component {
 
                 <SRD.DiagramWidget diagramEngine={this.engine}/>
                 {
-                    this.props.tournament ? this.props.tournament.dateStart==null && <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button> : ""
+                    this.props.tournament ? this.props.tournament.dateStart==null && <Button onClick={() => this.onClickSaveGrid()}>{this.props.tournament.maxParticipants === this.props.tparticipants.length? "Сохранить окончательную сетку (Вы больше не сможете ее изменить)": "Сохранить"}</Button> : ""
                 }
 
             </Card>
@@ -168,6 +169,7 @@ const mapStateToProps = (state) => ({
     tournament: selectortour.getTourId(state),
     getErrorGrid: selectortour.getErrorGrid(state),
     userProfile: selector.getProfile(state),
+    tparticipants: selectortour.getParticipants(state),
     // engine: state.engine
 });
 
@@ -175,6 +177,8 @@ const mapDispatchToProps = dispatch =>
     bindActionCreators({
             tour: (id) => actions.tournamentIdRequest(id),
             saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
+            participants: (id) => actions.tournamentPartsRequest(id),
+
         },
         dispatch);
 

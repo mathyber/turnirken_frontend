@@ -26,6 +26,7 @@ import LoginForm from "../login/login_form";
 import RegForm from "../login/registration_form";
 import Welcome from "./welcome";
 
+
 class TournamentPage extends React.Component {
     date1 = new Date();
 
@@ -34,13 +35,16 @@ class TournamentPage extends React.Component {
         this.state = {
             num: 0,
             search: "",
-            searchGame: ""
+            searchGame: "",
+            page: 0,
+            pageG: 0,
+            e: true
         }
     }
 
     componentDidMount() {
         this.props.search({
-            str: ""
+            str: "" //, page: 0
         });
         //this.props.getUserProfile();
         // console.log(this.props.isAuth)
@@ -48,36 +52,88 @@ class TournamentPage extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevState.search !== this.state.search) {
+            this.setState({page: 0, e: true});
             this.props.search({
-                str: this.state.search
+                str: this.state.search, page: 0
             });
         }
         if (prevState.searchGame !== this.state.searchGame) {
+            this.setState({pageG: 0, e: false});
             this.props.searchGame({
-                str: this.state.searchGame
+                str: this.state.searchGame, page: 0
             });
         }
     }
+
+    onClick() {
+        if (this.state.e) {
+            this.props.search({
+                str: this.state.search, page: this.state.page + 1
+            });
+            this.setState({page: this.state.page + 1});
+        } else {
+            this.props.searchGame({
+                str: this.state.searchGame, page: this.state.pageG + 1
+            });
+            this.setState({pageG: this.state.pageG + 1});
+        }
+        window.scrollTo(0, 0);
+    }
+
+    onClickPred() {
+        if (this.state.e) {
+            this.props.search({
+                str: this.state.search, page: this.state.page - 1
+            });
+            this.setState({page: this.state.page - 1});
+        } else {
+            this.props.searchGame({
+                str: this.state.searchGame, page: this.state.pageG - 1
+            });
+            this.setState({pageG: this.state.pageG - 1});
+        }
+    }
+
 
     date(str) {
         let date = new Date(str);
         return date.toLocaleDateString();
     }
 
-    buttonStr(tour){
-        if (Date.parse(tour.dateFinish) < this.date1) return "Турнир завершен";
+    buttonStr(tour) {
+        if (Date.parse(tour.dateFinish).toLocaleString() < this.date1) return "Турнир завершен";
         else {
-            if (Date.parse(tour.dateFinishReg) < this.date1) return "Регистрация завершена";
+            if (Date.parse(tour.dateFinishReg).toLocaleString() < this.date1) return "Регистрация завершена";
             else {
-                if (Date.parse(tour.dateStart) < this.date1) return "Турнир уже идет";
+                if (Date.parse(tour.dateStart).toLocaleString() < this.date1) return "Турнир уже идет";
                 else {
-                    if (Date.parse(tour.dateStartReg) > this.date1) return "Регистрация на турнир не началась";
+                    if (Date.parse(tour.dateStartReg).toLocaleString() > this.date1) return "Регистрация на турнир не началась";
                     else {
                         if (this.props.isAuth) {
-                            if (tour.userReg) return "Участвовать";
+                            if (!tour.userReg) return "Участвовать";
                             else return "Вы уже участвуете";
-                        }
-                        else return "Войдите, чтобы участвовать";
+                        } else return "Войдите, чтобы участвовать";
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    buttonDisabled(tour) {
+        if (Date.parse(tour.dateFinish) < this.date1) return true;
+        else {
+            if (Date.parse(tour.dateFinishReg) < this.date1) return true;
+            else {
+                if (Date.parse(tour.dateStart) < this.date1) return true;
+                else {
+                    if (Date.parse(tour.dateStartReg) > this.date1) return true;
+                    else {
+                        if (this.props.isAuth) {
+                            if (!tour.userReg) return false;
+                            else return true;
+                        } else return true;
                     }
                 }
             }
@@ -97,7 +153,7 @@ class TournamentPage extends React.Component {
 
     render() {
         console.log(this.props);
-        console.log(this.date);
+        console.log(this.state);
         return (
             <div style={{marginRight: '5%', marginLeft: '5%'}}>
                 <Row>
@@ -128,12 +184,23 @@ class TournamentPage extends React.Component {
                                 </Col>
                             </Row>
                             {
+                                ((this.state.e === true && this.state.page !== 0) || (this.state.e === false && this.state.pageG !== 0)) &&
+                                <Button variant="primary" style={{margin: '12px', marginTop: '0'}}
+                                        onClick={() => this.onClickPred()}>
+                                    предыдущая страница
+                                </Button>
+                            }
+
+                            {
                                 this.props.tournaments.length !== 0 ? this.props.tournaments.map(tour => {
                                         return (
-                                            <Card className="card text-white bg-primary" style={{margin: '12px'}}
+                                            <Card className="card text-white"
+                                                  bg={tour.userReg === true ? "success" : "primary"}
+                                                  style={{margin: '12px'}}
                                                   key={tour.id}>
                                                 <Card.Header
-                                                    as="h3"><b>{tour.tournamentName} {tour.season}</b></Card.Header>
+                                                    as="h3"><b>{tour.tournamentName} {tour.season}</b>
+                                                </Card.Header>
                                                 {tour.logo &&
                                                 <Card.Img style={{width: '100%', height: '30ex', objectFit: 'cover'}}
                                                           variant="top"
@@ -144,23 +211,32 @@ class TournamentPage extends React.Component {
                                                         организатор: {tour.organizer.login}, регистрация на
                                                         участие: {this.date(tour.dateStartReg)}
                                                         {
-                                                            tour.dateFinishReg != null ? <> - {this.date(tour.dateFinishReg)}</> : " - н.в."
+                                                            tour.dateFinishReg != null ? <> - {this.date(tour.dateFinishReg)}</> : Date.parse(tour.dateStartReg) > this.date1 ? " - ?" : " - н.в."
                                                         }
                                                     </Card.Title>
-                                                    <Card.Text>
-                                                        {tour.info && tour.info.slice(0, 200) + "..."}
-                                                    </Card.Text>
 
+                                                    <Card.Text>
+                                                        {tour.info && tour.info.slice(0, 200) + ""}
+                                                    </Card.Text>
+                                                    {
+                                                        this.state.num === tour.id ? this.props.regError === true ?
+                                                            <Alert key="1" variant="danger">
+                                                                При регистрации произошла ошибка
+                                                            </Alert> : this.props.regError === false &&
+                                                            <Alert key="2" variant="success">
+                                                                Вы теперь участвуете в этом турнире
+                                                            </Alert> : ""
+                                                    }
                                                     {
                                                         tour.organizer.user_id === this.props.userProfile.id ?
                                                             <Button variant="info"
                                                                     href={TOUR_ORGANIZER_PANEL_LINK + tour.id}>
                                                                 {
-                                                                    <div>Редактировать</div>
+                                                                    <div>Открыть панель организатора</div>
                                                                 }
                                                             </Button> :
                                                             <Button variant="light"
-                                                                    disabled={Date.parse(tour.dateFinishReg) < this.date1 || Date.parse(tour.dateFinish) < this.date1 || !this.props.isAuth}
+                                                                    disabled={this.buttonDisabled(tour)}
                                                                     onClick={() => this.onParticipate(tour.id)}>
                                                                 {
                                                                     this.buttonStr(tour)
@@ -168,6 +244,7 @@ class TournamentPage extends React.Component {
                                                             </Button>
                                                     }
                                                 </Card.Body>
+                                                <Button variant={tour.userReg === true ? "success" : "primary"} href={"/tournament/" + tour.id}>Перейти на страницу турнира</Button>
                                             </Card>)
 
                                     }) :
@@ -175,6 +252,14 @@ class TournamentPage extends React.Component {
                                         <Card.Header as="h3"><b>Турниров нет. Но скоро будут</b></Card.Header>
                                     </Card>
                             }
+                            {
+                                this.props.tournaments.length === 20 &&
+                                <Button variant="primary" style={{margin: '12px', marginTop: '5px'}}
+                                        onClick={() => this.onClick()}>
+                                    следующая страница
+                                </Button>
+                            }
+
 
                         </Card>
                     </Col>
@@ -195,7 +280,6 @@ class TournamentPage extends React.Component {
             </div>
         )
     }
-
 }
 
 const mapStateToProps = state => ({

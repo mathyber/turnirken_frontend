@@ -73,7 +73,6 @@ export default function (state = initialState, { type, payload }) {
         case TOURNAMENT_REG_FAILURE:
             return { ...state, regError: true };
 
-
         case TOURNAMENT_PARTICIPANTS_REQUEST:
             return { ...state, ...payload };
         case TOURNAMENT_PARTICIPANTS_SUCCESS:

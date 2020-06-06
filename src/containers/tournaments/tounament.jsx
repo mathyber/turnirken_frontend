@@ -5,7 +5,7 @@ import {bindActionCreators, compose} from "redux";
 import actions from "../../actions";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
-import {LOGIN_LINK, TOURNAMENT_CREATE_LINK} from "../../routes/link";
+import {LOGIN_LINK, TOUR_ORGANIZER_PANEL_LINK, TOURNAMENT_CREATE_LINK} from "../../routes/link";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import selectorauth from "../../selectors/auth";
@@ -27,136 +27,331 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import CardGroup from "react-bootstrap/CardGroup";
 import Alert from "react-bootstrap/Alert";
+import selectorgr from "../../selectors/groups";
+import selectorm from "../../selectors/matches";
+import {Container} from "react-bootstrap";
 
 class Tournament extends React.Component {
-    date = new Date();
+    date1 = new Date();
     engine = new SRD.DiagramEngine();
     model = new SRD.DiagramModel();
 
     constructor(props) {
         super(props);
         this.state = {
-            group: "A",
-            groupNum: 4,
-            groupNumWin: 2,
-            stage: "Финал",
-            place: 3,
-            grid: false,
+            grid: false
         }
         this.engine.installDefaultFactories();
         this.engine.setDiagramModel(this.model);
 
     }
 
+    date(str) {
+        let date = new Date(str);
+        return date.toLocaleDateString();
+    }
+
     componentDidMount() {
         this.props.tour(this.props.match.params.id);
+        this.props.groupsTt(this.props.match.params.id);
+       // this.props.matches(this.props.match.params.id);
+        this.props.matchesAllInTour(this.props.match.params.id);
+        this.props.participants(this.props.match.params.id);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.tournament !== this.props.tournament) {
-            if(this.props.tournament.grid===null) {this.setState({grid:true});
-            for (let i = 0; i < this.props.tournament.maxParticipants; i++) {
-                this.model.addNode(new User.UserModel("Участник " + (i + 1))).setPosition(10, 10 + (i * 50));
-            }
-            this.model.addNode(new Final.FinalModel(1)).setPosition(400, 200);}
-            else {
+          //  this.props.tour(this.props.match.params.id);
+            if(this.props.tournament.grid!==null)
                 this.model.deSerializeDiagram(JSON.parse(this.props.tournament.grid), this.engine);
-            }
         }
     }
 
-    onClickSaveGrid() {
-        console.log(this.model.serializeDiagram());
-        console.log(tTG.default(this.model.serializeDiagram()));
-        this.props.saveGrid({
-            grid: JSON.stringify(this.model.serializeDiagram()),
-            users: tTG.default(this.model.serializeDiagram()).users,
-            results: tTG.default(this.model.serializeDiagram()).results,
-            matches: tTG.default(this.model.serializeDiagram()).matches,
-            groups: tTG.default(this.model.serializeDiagram()).groups,
-            id: this.props.match.params.id
-        })
+
+    buttonStr(tour) {
+        if (Date.parse(tour.dateFinish) < this.date1) return "Турнир завершен";
+        else {
+            if (Date.parse(tour.dateFinishReg) < this.date1) return "Регистрация завершена";
+            else {
+                if (Date.parse(tour.dateStart) < this.date1) return "Турнир уже идет";
+                else {
+                    if (Date.parse(tour.dateStartReg) > this.date1) return "Регистрация на турнир не началась";
+                    else {
+                        if (this.props.isAuth) {
+                            if (!tour.userReg) return "Участвовать";
+                            else return "Вы уже участвуете";
+                        } else return "Войдите, чтобы участвовать";
+                    }
+                }
+            }
+
+        }
+
     }
 
-    onChangeInput = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        this.setState({
-            [name]: value,
-        });
-    };
+    buttonDisabled(tour) {
+        if (Date.parse(tour.dateFinish) < this.date1) return true;
+        else {
+            if (Date.parse(tour.dateFinishReg) < this.date1) return true;
+            else {
+                if (Date.parse(tour.dateStart) < this.date1) return true;
+                else {
+                    if (Date.parse(tour.dateStartReg) > this.date1) return true;
+                    else {
+                        if (this.props.isAuth) {
+                            if (!tour.userReg) return false;
+                            else return true;
+                        } else return true;
+                    }
+                }
+            }
 
+        }
+
+    }
+
+    onParticipate(id) {
+        this.setState({num: id})
+        this.props.reg({id: id});
+    }
 
     render() {
         console.log(this.props);
-        console.log(this.engine);
+      //  console.log(this.);
 
         return (
+            this.props.tournament &&
+            <div style={{marginRight: '5%', marginLeft: '5%'}}>
             <Card style={{margin: '12px'}}>
-                <Card.Header as="h4">Создание схемы турнира {this.props.tournament && this.props.tournament.tournamentName.name +" "+ this.props.tournament.season}</Card.Header>
-                {
-                    this.props.getErrorGrid ?
-                        <Alert style={{margin: "15px"}} key="1" variant="danger">
-                            При сохранении произошла ошибка
-                        </Alert> : this.props.getErrorGrid===false &&
-                        <Alert style={{margin: "15px"}} key="2" variant="success">
-                            Сохранено
-                        </Alert>
-                }
-
-                {
-                    this.state.grid &&
+                <Card className="card text-white"
+                      bg={this.props.tournament.userReg === true ? "success" : "primary"}
+                      style={{margin: '12px'}}
+                      key={this.props.tournament.id}>
+                    <Card.Header
+                        as="h3"><b>{this.props.tournament.tournamentName} {this.props.tournament.season}</b>
+                    </Card.Header>
+                    {this.props.tournament.logo &&
+                    <Card.Img style={{width: '100%', height: '30ex', objectFit: 'cover'}}
+                              variant="top"
+                              src={this.props.tournament.logo}/>}
                     <Card.Body>
+                        <Card.Title><b>Игра: {this.props.tournament.gameName}</b> </Card.Title>
+                        <Card.Title>Участников: {this.props.tournament.participants}/{this.props.tournament.maxParticipants},
+                            организатор: {this.props.tournament.organizer.login}, регистрация на
+                            участие: {this.date(this.props.tournament.dateStartReg)}
+                            {
+                                this.props.tournament.dateFinishReg != null ? <> - {this.date(this.props.tournament.dateFinishReg)}</> : Date.parse(this.props.tournament.dateStartReg) > this.date1 ? " - ?" : " - н.в."
+                            }
+                        </Card.Title>
 
-                    <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
-                        <Form.Label column sm={2}>Имя группы:</Form.Label>
-                        <Col sm={2}>
-                            <Form.Control size="sm" type="text" name="group" onChange={this.onChangeInput}/>
-                        </Col>
-                        <Form.Label column sm={2}>Участников в группе:</Form.Label>
-                        <Col sm={1}>
-                            <Form.Control size="sm" type="number" name="groupNum" onChange={this.onChangeInput}/>
-                        </Col>
-                        <Form.Label column sm={2}>Выходит из группы:</Form.Label>
-                        <Col sm={1}>
-                            <Form.Control size="sm" type="number" name="groupNumWin" onChange={this.onChangeInput}/>
-                        </Col>
-                        <Col sm={1}>
-                            <Button size="sm" onClick={() => {
-                                this.model.addNode(new Group.GroupModel(this.state.group, this.state.groupNum, this.state.groupNumWin, this.state.groupNum)).setPosition(400, 200);
-                            }}>+группа</Button>
-                        </Col>
-
-                    </Form.Group>
-                    <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
-
-                        <Form.Label column sm={2}>Стадия:</Form.Label>
-                        <Col sm={2}>
-                            <Form.Control size="sm" type="text" name="stage" onChange={this.onChangeInput}/>
-                        </Col>
-                        <Col sm={1}>
-                            <Button size="sm" onClick={() => {
-                                this.model.addNode(new Match.MatchModel(this.state.stage)).setPosition(400, 200);
-                            }}>+матч</Button></Col>
-                        <Form.Label column sm={1}></Form.Label>
-                        <Form.Label column sm={2}>Место:</Form.Label>
-                        <Col sm={2}>
-                            <Form.Control size="sm" type="number" name="place" onChange={this.onChangeInput}/>
-                        </Col>
-                        <Col sm={1}>
-                            <Button size="sm" onClick={() => {
-                                this.model.addNode(new Final.FinalModel(this.state.place)).setPosition(400, 200);
-                            }}>+место</Button></Col>
-                    </Form.Group>
-
-                </Card.Body>}
-
-                <SRD.DiagramWidget diagramEngine={this.engine}/>
+                        <Card.Text>
+                            {this.props.tournament.info && this.props.tournament.info.slice(0, 200) + ""}
+                        </Card.Text>
+                        {
+                            this.state.num === this.props.tournament.id ? this.props.regError === true ?
+                                <Alert key="1" variant="danger">
+                                    При регистрации произошла ошибка
+                                </Alert> : this.props.regError === false &&
+                                <Alert key="2" variant="success">
+                                    Вы теперь участвуете в этом турнире
+                                </Alert> : ""
+                        }
+                        {
+                            this.props.tournament.organizer.user_id === this.props.userProfile.id ?
+                                <Button variant="info"
+                                        href={TOUR_ORGANIZER_PANEL_LINK + this.props.tournament.id}>
+                                    {
+                                        <div>Открыть панель организатора</div>
+                                    }
+                                </Button> :
+                                <Button variant="light"
+                                        disabled={this.buttonDisabled(this.props.tournament)}
+                                        onClick={() => this.onParticipate(this.props.tournament.id)}>
+                                    {
+                                        this.buttonStr(this.props.tournament)
+                                    }
+                                </Button>
+                        }
+                    </Card.Body>
+                </Card>
+                <Button style={{margin: '12px'}} onClick={() => this.setState({grid: !this.state.grid})}>{this.state.grid? "Закрыть ":"Открыть "} схему турнира</Button>
                 {
-                    this.state.grid && <Button onClick={() => this.onClickSaveGrid()}>Сохранить</Button>
+                    this.state.grid && <SRD.DiagramWidget diagramEngine={this.engine}/>
                 }
 
-            </Card>
+                <Card style={{margin: '12px'}}>
+                    <Card.Header as="h5">Участники</Card.Header>
+                    <div style={{maxHeight: "40rem", overflowY: "scroll"}}>
+
+                        {
+                            this.props.tparticipants.map(part => (
+                                    <Card className="card text-white" bg={part.info && part.info==="Победитель" ? "warning" : "primary" }
+                                          style={{margin: '10px', padding: "10px",paddingLeft:"50px"}}
+                                          key={part.id}>
+                                        {part.login ? part.login : "участника еще нет"}
+                                        {part.info && " - "+ part.info}
+                                    </Card>)
+                            )
+                        }
+                    </div>
+                </Card>
+
+                        <Card style={{margin: '12px'}}>
+                            <Card.Header as="h5">Все матчи турнира</Card.Header>
+                            <div className="d-flex flex-wrap justify-content-around" style={{ maxHeight: "40rem", overflowY: "scroll"}}>
+                                {
+                                    this.props.matchesTour.map(value => (
+                                            <Card className="card text-white bg-primary"
+                                                  bg={value.finish === false ? value.player1 && value.player2 ? "danger" : "secondary" : "primary"}
+                                                  style={{margin: '10px', minWidth: "400px", maxHeight:"176px"}}
+                                                  key={value.id}>
+                                                <Card.Header
+                                                    as="h6">Стадия: {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}</Card.Header>
+                                                <CardGroup>
+                                                    <Card className="card text-white bg-secondary" style={{
+                                                        margin: '5px',
+                                                        padding: "5px",
+                                                        height: "30px",
+                                                        textAlign: "right",
+                                                        marginTop: "30px"
+                                                    }}>
+                                                        {
+                                                            value.player1 ? value.player1.login : "---"
+                                                        }
+                                                    </Card>
+                                                    <Card.Title className="text-center"
+                                                                style={{margin: '5px', padding: "5px", fontSize: "60px"}}>
+                                                        {
+                                                            value.player1 ? value.resPlayer1 : "0"
+                                                        }
+                                                        :
+                                                        {
+                                                            value.player2 ? value.resPlayer2 : "0"
+                                                        }
+                                                    </Card.Title>
+                                                    <Card className="card text-white bg-secondary" style={{
+                                                        margin: '5px',
+                                                        padding: "5px",
+                                                        height: "30px",
+                                                        marginTop: "30px"
+                                                    }}>
+                                                        {
+                                                            value.player2 ? value.player2.login : "---"
+                                                        }
+                                                    </Card>
+                                                </CardGroup>
+                                                <Button onClick={() => this.props.history.push("/match/" + value.id)}>Перейти
+                                                    на страницу матча</Button>
+                                            </Card>
+                                        )
+                                    )
+                                }</div>
+                        </Card>
+
+                        <Card style={{margin: '12px'}}>
+                            <Card.Header as="h5">Группы турнира</Card.Header>
+                            <div className="d-flex flex-wrap justify-content-around" style={{maxHeight: "40rem", overflowY: "scroll"}}>
+                                {
+                                    this.props.groupsT.map(group => (
+                                            <Card className="card text-white bg-primary" style={{margin: '10px', width: "100%" ,maxHeight:"391px"}}
+                                                  key={group.idGroup}>
+                                                <Card.Header
+                                                    as="h5">Группа {group.groupName} {group.finish === true && "(игры в группе завершились)"}</Card.Header>
+                                                {
+                                                    group.results && group.results.map(result => (
+                                                        <Card className="card text-white"
+                                                              bg={result.win === true ? "success" : "primary"}
+                                                              style={{margin: '5px'}} key={result.id}>
+                                                            {
+                                                                <CardGroup>
+                                                                    <Card.Title style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px"
+                                                                    }}>
+                                                                        {
+                                                                            result.place
+                                                                        }
+                                                                    </Card.Title>
+                                                                    <Card className="card text-white bg-secondary" style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px",
+
+                                                                        minWidth: '200px',
+                                                                    }}>
+                                                                        <b>{
+                                                                            result.part.login
+                                                                        }</b>
+                                                                    </Card>
+                                                                    <Card.Title style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px", fontSize: "15px"
+                                                                    }}>
+                                                                        {
+                                                                            "Победы: " + result.wins
+                                                                        }
+                                                                    </Card.Title>
+                                                                    <Card.Title style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px", fontSize: "15px"
+                                                                    }}>
+                                                                        {
+                                                                            "Ничьи: " + result.draw
+                                                                        }
+                                                                    </Card.Title>
+                                                                    <Card.Title style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px", fontSize: "15px"
+                                                                    }}>
+                                                                        {
+                                                                            "Поражения: " + result.losing
+                                                                        }
+                                                                    </Card.Title>
+                                                                    <Card.Title style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px",
+                                                                        fontSize: "15px",
+                                                                        minWidth: "150px",
+                                                                        textAlign: "center"
+                                                                    }}>
+                                                                        {
+                                                                            result.winPoints + " : " + result.losingPoints + " "
+                                                                        }
+                                                                        (
+                                                                        {
+                                                                            result.winPoints - result.losingPoints
+                                                                        }
+                                                                        )
+                                                                    </Card.Title>
+                                                                    <Card bg={"info"} style={{
+                                                                        margin: '5px',
+                                                                        padding: "5px",
+                                                                        fontSize: "20px",
+                                                                        maxWidth: "40px",
+                                                                        textAlign: "center"
+                                                                    }}>
+                                                                        {
+                                                                            result.points
+                                                                        }
+                                                                    </Card>
+                                                                </CardGroup>
+                                                            }
+                                                        </Card>
+                                                    ))
+                                                }
+                                                <Card style={{margin: '5px', padding:'5px'}} className="card text-white bg-primary"> Очки за победу: {group.numWin}, очки за ничью: {group.numDraw}  </Card>
+                                                <Button onClick={() => this.props.history.push("/group/" + group.idGroup)}>Перейти
+                                                    на страницу группы</Button>
+                                            </Card>
+                                        )
+                                    )
+                                }
+                            </div>
+                        </Card>
+
+
+
+
+            </Card></div>
 
 
         )
@@ -166,15 +361,25 @@ class Tournament extends React.Component {
 const mapStateToProps = (state) => ({
     isAuth: selectorauth.isAuth(state),
     tournament: selectortour.getTourId(state),
-    getErrorGrid: selectortour.getErrorGrid(state),
+   // getErrorGrid: selectorthis.props.tournament.getErrorGrid(state),
     userProfile: selector.getProfile(state),
     // engine: state.engine
+    regError: selectortour.getErrorReg(state),
+    groupsT: selectorgr.groupsT(state),
+   // matchesAll: selectorm.matchesAll(state),
+    matchesTour: selectorm.matchesTour(state),
+    tparticipants: selectortour.getParticipants(state),
+
 });
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
+            participants: (id) => actions.tournamentPartsRequest(id),
             tour: (id) => actions.tournamentIdRequest(id),
-            saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
+            reg: (payload) => actions.tournamentRegRequest(payload),
+            groupsTt: (id) => actions.groupsRequest(id),
+            matchesAllInTour: (id) => actions.matchesRequest(id),
+            //saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
         },
         dispatch);
 
