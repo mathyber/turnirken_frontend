@@ -27,6 +27,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import CardGroup from "react-bootstrap/CardGroup";
 import Alert from "react-bootstrap/Alert";
+import Container from "react-bootstrap/Container";
 
 class TournamentSettings extends React.Component {
     date = new Date();
@@ -66,7 +67,7 @@ class TournamentSettings extends React.Component {
         }
     }
 
-    onClickSaveGrid() {
+    onClickSaveGridFinal() {
         console.log(this.model.serializeDiagram());
         console.log(tTG.default(this.model.serializeDiagram()));
         this.props.saveGrid({
@@ -75,6 +76,15 @@ class TournamentSettings extends React.Component {
             results: tTG.default(this.model.serializeDiagram()).results,
             matches: tTG.default(this.model.serializeDiagram()).matches,
             groups: tTG.default(this.model.serializeDiagram()).groups,
+            id: this.props.match.params.id
+        })
+    }
+
+    onClickSaveGrid() {
+        console.log(this.model.serializeDiagram());
+        console.log(tTG.default(this.model.serializeDiagram()));
+        this.props.saveGrid({
+            grid: JSON.stringify(this.model.serializeDiagram()),
             id: this.props.match.params.id
         })
     }
@@ -116,11 +126,11 @@ class TournamentSettings extends React.Component {
                         </Col>
                         <Form.Label column sm={2}>Участников в группе:</Form.Label>
                         <Col sm={1}>
-                            <Form.Control size="sm" type="number" name="groupNum" onChange={this.onChangeInput}/>
+                            <Form.Control size="sm" type="number" name="groupNum" min="1" max={this.props.tournament.maxParticipants }  onChange={this.onChangeInput}/>
                         </Col>
                         <Form.Label column sm={2}>Выходит из группы:</Form.Label>
                         <Col sm={1}>
-                            <Form.Control size="sm" type="number" name="groupNumWin" onChange={this.onChangeInput}/>
+                            <Form.Control size="sm" type="number" name="groupNumWin" min="1" max={this.state.groupNum } onChange={this.onChangeInput}/>
                         </Col>
                         <Col sm={1}>
                             <Button size="sm" onClick={() => {
@@ -133,7 +143,17 @@ class TournamentSettings extends React.Component {
 
                         <Form.Label column sm={2}>Стадия:</Form.Label>
                         <Col sm={2}>
-                            <Form.Control size="sm" type="text" name="stage" onChange={this.onChangeInput}/>
+                            <Form.Control as="select" size="sm" type="text" name="stage" onChange={this.onChangeInput}>
+                                <option>Финал</option>
+                                <option>1/2</option>
+                                <option>1/4</option>
+                                <option>1/8</option>
+                                <option>1/16</option>
+                                <option>1/32</option>
+                                <option>1/64</option>
+                                <option>1/128</option>
+                                <option>Прочее</option>
+                            </Form.Control>
                         </Col>
                         <Col sm={1}>
                             <Button size="sm" onClick={() => {
@@ -142,7 +162,7 @@ class TournamentSettings extends React.Component {
                         <Form.Label column sm={1}></Form.Label>
                         <Form.Label column sm={2}>Место:</Form.Label>
                         <Col sm={2}>
-                            <Form.Control size="sm" type="number" name="place" onChange={this.onChangeInput}/>
+                            <Form.Control size="sm" type="number" name="place" min="1" max={this.props.tournament.maxParticipants } onChange={this.onChangeInput}/>
                         </Col>
                         <Col sm={1}>
                             <Button size="sm" onClick={() => {
@@ -154,7 +174,11 @@ class TournamentSettings extends React.Component {
 
                 <SRD.DiagramWidget diagramEngine={this.engine}/>
                 {
-                    this.props.tournament ? this.props.tournament.dateStart==null && <Button onClick={() => this.onClickSaveGrid()}>{this.props.tournament.maxParticipants === this.props.tparticipants.length? "Сохранить окончательную сетку (Вы больше не сможете ее изменить)": "Сохранить"}</Button> : ""
+                    this.props.tournament ? this.props.tournament.dateStart==null && <Card>
+                        <Button style={{margin: '12px'}} onClick={() => this.onClickSaveGrid()}>Сохранить предварительную версию схемы</Button>
+                        <Button style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы</Button>
+                    </Card>
+                         : ""
                 }
 
             </Card>

@@ -97,7 +97,7 @@ class TournamentCreatePage extends React.Component {
 
                             <Form.Group controlId="exampleForm.SelectCustom">
                                 <Form.Label>Макс. кол-во участников</Form.Label>
-                                <Form.Control type="number" name="maxParticipants" onChange={this.onChangeInput}
+                                <Form.Control type="number" name="maxParticipants" min="2" max="100" onChange={this.onChangeInput}
                                               required/>
                             </Form.Group>
 
