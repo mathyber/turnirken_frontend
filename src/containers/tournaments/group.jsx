@@ -42,7 +42,7 @@ class GroupTour extends React.Component {
             <Card style={{margin: '12px', marginRight: '5%', marginLeft: '5%'}}>
                 <Card.Header as="h4">Группа {this.props.groupTt.groupName} {this.props.groupTt.finish===true&&"(игры в группе завершились)"}</Card.Header>
                 {this.props.matchesGr.length!=0 && <Card className="card text-white bg-primary" style={{margin: '10px', minWidth: "400px"}}>
-                    <Button style={{fontSize:"20px"}} onClick={() => this.props.history.push("/tournament/" + this.props.matchTt.tournament.id)}>
+                    <Button style={{fontSize:"20px"}} onClick={() => this.props.history.push("/tournament/" + this.props.matchesGr[0].tournament.id)}>
                         Группа турнира <b>"{this.props.matchesGr[0].tournament.name + " " + this.props.matchesGr[0].tournament.season}"</b></Button>
                 </Card>}
 

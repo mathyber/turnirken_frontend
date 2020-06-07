@@ -84,7 +84,7 @@ class TournamentSettings extends React.Component {
     }
 
     onClickSaveGrid() {
-        console.log(this.model.serializeDiagram());
+
         console.log(tTG.default(this.model.serializeDiagram()));
         this.props.saveGrid({
             grid: JSON.stringify(this.model.serializeDiagram()),
@@ -110,11 +110,11 @@ class TournamentSettings extends React.Component {
 
         return (
             <Card style={{margin: '12px'}}>
-                <Card.Header as="h4">{this.props.tournament ? this.props.tournament.dateFinishReg ? "Схема турнира" : "Редактор схемы турнира" : ""}</Card.Header>
+                <Card.Header as="h4">{this.props.tournament ? this.props.tournament.dateStart ? "Схема турнира" : "Редактор схемы турнира" : ""}</Card.Header>
 
 
                 {
-                    this.props.tournament ? this.props.tournament.dateFinishReg==null &&
+                    this.props.tournament ? this.props.tournament.dateStart==null &&
                     <Card.Body>
 
                     <Form.Group style={{fontSize: "13px"}} as={Row} controlId="exampleForm.SelectCustom">
@@ -181,9 +181,9 @@ class TournamentSettings extends React.Component {
                         </Alert>
                 }
                 {
-                    this.props.tournament ? this.props.tournament.dateFinishReg==null && <Card>
+                    this.props.tournament ? this.props.tournament.dateStart==null && <Card>
                         <Button style={{margin: '12px'}} onClick={() => this.onClickSaveGrid()}>Сохранить предварительную версию схемы</Button>
-                        <Button style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы</Button>
+                        <Button disabled={Date.parse(this.props.tournament.dateStartReg) > this.date} style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы и остановить регистрацию</Button>
                     </Card>
                          : ""
                 }

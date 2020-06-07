@@ -322,7 +322,7 @@ class TournamentOrganizerPanel extends React.Component {
                     <div className="d-flex flex-wrap justify-content-around" style={{maxHeight: "40rem", overflowY: "scroll"}}>
                         {
                             this.props.groupsT.map(group => (
-                                    <Card className="card text-white bg-primary" style={{margin: '10px', width: "100%" ,maxHeight:"391px"}}
+                                    <Card className="card text-white bg-primary" style={{margin: '10px', width: "100%"}}
                                           key={group.idGroup}>
                                         <Card.Header
                                             as="h5">Группа {group.groupName} {group.finish === true && "(игры в группе завершились)"}</Card.Header>

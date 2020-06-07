@@ -56,7 +56,7 @@ class Profile extends React.Component {
                     <Card.Text>
                         Принял участие в <b>{this.props.userProfile.numPs}</b> турнирaх(-e)
                         (<b>{this.props.userProfile.numW}</b> побед, <b>{this.props.userProfile.num2}</b> вторых
-                        мест, <b>{this.props.userProfile.numW}</b> третьих мест)
+                        мест, <b>{this.props.userProfile.num3}</b> третьих мест)
                     </Card.Text>
                     <Card.Text>
                         Организовал <b>{this.props.userProfile.numOrg}</b> турнир(-a,-ов)
@@ -72,10 +72,10 @@ class Profile extends React.Component {
                             this.props.userProfile.matches && this.props.userProfile.matches.map(value => (
                                     <Card className="card text-white bg-primary"
                                           bg={value.finish === false ? value.player1 && value.player2 ? "danger" : "secondary" : "primary"}
-                                          style={{margin: '10px', minWidth: "400px", maxHeight: "176px"}}
+                                          style={{margin: '10px', width: "400px", maxHeight: "176px"}}
                                           key={value.id}>
                                         <Card.Header
-                                            as="h6">Стадия: {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}</Card.Header>
+                                            as="h6"><b>{value.tournament.name + " "+ value.tournament.season}</b>, {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}</Card.Header>
                                         <CardGroup>
                                             <Card className="card text-white bg-secondary" style={{
                                                 margin: '5px',

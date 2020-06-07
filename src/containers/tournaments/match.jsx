@@ -26,7 +26,6 @@ class MatchTour extends React.Component {
             info: ""
         }
 
-
     }
 
     componentDidMount() {

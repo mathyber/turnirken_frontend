@@ -26,7 +26,7 @@ class TournamentCreatePage extends React.Component {
             logo: '',
             maxParticipants: 16,
             onlyAdminResult: false,
-            dateStartReg: '',
+            dateStartReg: new Date(),
             dateFinishReg: '',
             info: ''
         }
@@ -97,7 +97,7 @@ class TournamentCreatePage extends React.Component {
 
                             <Form.Group controlId="exampleForm.SelectCustom">
                                 <Form.Label>Макс. кол-во участников</Form.Label>
-                                <Form.Control type="number" name="maxParticipants" min="2" max="100" onChange={this.onChangeInput}
+                                <Form.Control style={{width: "20%"}} type="number" name="maxParticipants" min="2" max="100" onChange={this.onChangeInput}
                                               required/>
                             </Form.Group>
 
@@ -128,7 +128,7 @@ class TournamentCreatePage extends React.Component {
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Даты регистрации участников</Form.Label>
+                                <Form.Label>Дата начала регистрации участников</Form.Label>
                                 <Row>
                                     <Col sm={1}>
                                         c
@@ -158,7 +158,7 @@ class TournamentCreatePage extends React.Component {
                                 }
                             </Form.Group>
                             <Button style={{width: "100%"}} variant="primary" type="submit">
-                                Далее
+                                Создать
                             </Button>
                         </Form>
                     </Card.Body>

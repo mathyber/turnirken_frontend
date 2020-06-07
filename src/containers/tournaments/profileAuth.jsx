@@ -68,7 +68,7 @@ class ProfileAuth extends React.Component {
                                           style={{margin: '10px', minWidth: "400px", maxHeight: "176px"}}
                                           key={value.id}>
                                         <Card.Header
-                                            as="h6">Стадия: {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}</Card.Header>
+                                            as="h6"><b>{value.tournament.name + " "+ value.tournament.season}</b>, {value.playoffStage ? value.playoffStage : value.groupName && "Группа " + value.groupName + ", тур " + value.round}</Card.Header>
                                         <CardGroup>
                                             <Card className="card text-white bg-secondary" style={{
                                                 margin: '5px',

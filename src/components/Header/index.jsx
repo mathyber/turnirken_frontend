@@ -35,20 +35,16 @@ class Header extends React.Component {
             <header className="header">
                 <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
                     <Navbar.Brand href={TOURNAMENTS_LINK}><b>ТУРНИРКЕН</b></Navbar.Brand>
-                    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse id="responsive-navbar-nav">
 
                         {
                             JwtHelper.isTokenExist &&
                                 <DropdownButton id="dropdown-basic-button" title={
-                                    this.props.userProfile.login ? this.props.userProfile.login + "⠀" : "user"
+                                    this.props.userProfile.login ? this.props.userProfile.login : "user"
                                 }>
                                     <Dropdown.Item onClick={() => this.props.history.push(ME_LINK)}>Профиль</Dropdown.Item>
                                     <Dropdown.Item onClick={()=>this.onClick()}>Выйти</Dropdown.Item>
                                 </DropdownButton>
                         }
-                        {"⠀⠀⠀⠀⠀"}
-                    </Navbar.Collapse>
                 </Navbar>
             </header>
         )

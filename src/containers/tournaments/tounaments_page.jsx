@@ -63,6 +63,13 @@ class TournamentPage extends React.Component {
                 str: this.state.searchGame, page: 0
             });
         }
+        if (prevProps.userProfile !== this.props.userProfile) {
+            this.setState({page: 0, e: true});
+            this.props.search({
+                str: "", page: 0
+            });
+        }
+
         if(prevState.num !== this.state.num ){
             if (this.state.e) {
                 this.props.search({
