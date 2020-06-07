@@ -37,22 +37,15 @@ class Header extends React.Component {
                     <Navbar.Brand href={TOURNAMENTS_LINK}><b>ТУРНИРКЕН</b></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href={TOURNAMENTS_LINK}>Турниры</Nav.Link>
-                        </Nav>
 
                         {
-                            JwtHelper.isTokenExist ?
+                            JwtHelper.isTokenExist &&
                                 <DropdownButton id="dropdown-basic-button" title={
                                     this.props.userProfile.login ? this.props.userProfile.login + "⠀" : "user"
                                 }>
                                     <Dropdown.Item onClick={() => this.props.history.push(ME_LINK)}>Профиль</Dropdown.Item>
                                     <Dropdown.Item onClick={()=>this.onClick()}>Выйти</Dropdown.Item>
-                                </DropdownButton> :
-                                <ButtonGroup>
-                                    <Button onClick={() => this.props.history.push(LOGIN_LINK)}>Войти</Button>
-                                    <Button onClick={() => this.props.history.push(REG_LINK)}>Регистрация</Button>
-                                </ButtonGroup>
+                                </DropdownButton>
                         }
                         {"⠀⠀⠀⠀⠀"}
                     </Navbar.Collapse>

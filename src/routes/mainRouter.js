@@ -26,19 +26,22 @@ import ProfileAuth from "../containers/tournaments/profileAuth";
 function MainRouter() {
     return (
         <Switch>
+
             <Route path={LOGIN_LINK} render={() => JwtHelper.isTokenExist ?
-                <Redirect to={{pathname: {PROFILE_LINK}}} /> : <LoginForm />} />
+                <Redirect to={{pathname: {TOURNAMENTS_LINK}}} /> : <LoginForm />} />
             <Route path={REG_LINK} render={() => JwtHelper.isTokenExist ?
-                <Redirect to={{pathname: {PROFILE_LINK}}} /> : <RegForm />} />
+                <Redirect to={{pathname: {TOURNAMENTS_LINK}}} /> : <RegForm />} />
             <Route path={TOURNAMENTS_LINK} component={TournamentPage}/>
-            <PrivateRoute path={TOURNAMENT_CREATE_LINK} component={TournamentCreatePage}/>
-            <PrivateRoute path={TOURNAMENT_SETTINGS_LINK} component={TournamentSettings}/>
-            <PrivateRoute path={TOURNAMENT_ORGANIZER_PANEL_LINK} component={TournamentOrg}/>
+
             <PrivateRoute path={USER_LINK} component={Profile}/>
             <PrivateRoute path={ME_LINK} component={ProfileAuth}/>
             <Route path={MATCH_LINK} component={MatchTour}/>
             <Route path={GROUP_LINK} component={GroupTour}/>
             <Route path={TOURNAMENT_LINK} component={Tournament}/>
+            <PrivateRoute path={TOURNAMENT_CREATE_LINK} component={TournamentCreatePage}/>
+            <PrivateRoute path={TOURNAMENT_SETTINGS_LINK} component={TournamentSettings}/>
+            <PrivateRoute path={TOURNAMENT_ORGANIZER_PANEL_LINK} component={TournamentOrg}/>
+            <Route path={"/"} component={TournamentPage}/>
         </Switch>
     );
 }
