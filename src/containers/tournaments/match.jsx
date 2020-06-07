@@ -36,9 +36,15 @@ class MatchTour extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
 
-        if(prevState != this.state)
-     this.props.matchT(this.props.match.params.id);
+       // if(prevState != this.state)
+         //   this.props.matchT(this.props.match.params.id);
 
+    }
+
+    UNSAFE_componentWillUpdate( nextProps, nextState){
+       if(nextState != this.state)
+           this.props.matchT(this.props.match.params.id);
+       // if(nextProps.matchTt.story[0] != this.props.matchTt.story[0]) this.props.matchT(this.props.match.params.id);
     }
 
     disabledButton(){
@@ -111,17 +117,16 @@ class MatchTour extends React.Component {
                     <Card.Header
                         as="h6">Стадия: {this.props.matchTt.playoffStage ? this.props.matchTt.playoffStage : this.props.matchTt.groupName && "Группа " + this.props.matchTt.groupName + ", тур " + this.props.matchTt.round}</Card.Header>
                     <CardGroup>
-                        <Card className="card text-white bg-secondary" style={{
+                        <Card.Link href={this.props.matchTt.player1 && "/user/"+ this.props.matchTt.player1.user_id} className="text-right card text-white bg-secondary"  style={{
                             margin: '5px',
                             padding: "5px",
                             height: "30px",
-                            textAlign: "right",
                             marginTop: "50px",
                         }}>
                             {
                                 this.props.matchTt.player1 ? this.props.matchTt.player1.login : "---"
                             }
-                        </Card>
+                        </Card.Link>
                         <Card.Title className="text-center" style={{margin: '5px', padding: "5px", fontSize: "90px"}}>
                             {
                                 this.props.matchTt.player1 ? this.props.matchTt.resPlayer1 : "0"
@@ -131,12 +136,12 @@ class MatchTour extends React.Component {
                                 this.props.matchTt.player2 ? this.props.matchTt.resPlayer2 : "0"
                             }
                         </Card.Title>
-                        <Card className="card text-white bg-secondary"
+                        <Card.Link  href={this.props.matchTt.player2 && "/user/"+ this.props.matchTt.player2.user_id} className="card text-white bg-secondary"
                               style={{margin: '5px', padding: "5px", height: "30px", marginTop: "50px"}}>
                             {
                                 this.props.matchTt.player2 ? this.props.matchTt.player2.login : "---"
                             }
-                        </Card>
+                        </Card.Link>
                     </CardGroup>
 
                     {
@@ -208,7 +213,7 @@ class MatchTour extends React.Component {
                                     {this.date(res.date)}: <b>{this.resCreator(res.resCreator)}</b> установил {res.finish && "финальный"} счет <b>{res.resPlayer1}:{res.resPlayer2}</b>
                                 </Card.Text>
                                 <Card.Text>
-                                    <b>Информация:</b> {res.info !== "" ? res.info : "нет"}
+                                    <b>Информация:</b> {res.info? res.info : " "}
                                 </Card.Text>
                             </Card>
                         ))

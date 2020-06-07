@@ -1,6 +1,6 @@
 import React from "react";
 import {Dropdown, Navbar, Nav, NavDropdown} from "react-bootstrap";
-import {LOGIN_LINK, PROFILE_LINK, REG_LINK, TOURNAMENTS_LINK} from "../../routes/link";
+import {LOGIN_LINK, ME_LINK, PROFILE_LINK, REG_LINK, TOURNAMENTS_LINK} from "../../routes/link";
 import Button from "react-bootstrap/Button";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import JwtHelper from "../../utils/jwtHelper";
@@ -46,7 +46,7 @@ class Header extends React.Component {
                                 <DropdownButton id="dropdown-basic-button" title={
                                     this.props.userProfile.login ? this.props.userProfile.login + "⠀" : "user"
                                 }>
-                                    <Dropdown.Item onClick={() => this.props.history.push(PROFILE_LINK)}>Профиль</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => this.props.history.push(ME_LINK)}>Профиль</Dropdown.Item>
                                     <Dropdown.Item onClick={()=>this.onClick()}>Выйти</Dropdown.Item>
                                 </DropdownButton> :
                                 <ButtonGroup>
