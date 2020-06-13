@@ -63,7 +63,7 @@ class LoginForm extends React.Component {
                         {
                             this.props.authError &&
                             <Alert key="1" variant="danger">
-                                Логин или пароль неверен
+                                Логин или пароль введены неверно
                             </Alert>
                         }
                         <Button variant="primary" type="submit" disabled={!this.state.password || !this.state.login }>

@@ -181,7 +181,7 @@ class Tournament extends React.Component {
 
                 <Card style={{margin: '12px'}}>
                     <Card.Header as="h5">Участники</Card.Header>
-                    <div style={{maxHeight: "40rem", overflowY: "scroll"}}>
+                    <div style={{maxHeight: "20rem", overflowY: "scroll"}}>
 
                         {
                             this.props.tparticipants.map(part => (

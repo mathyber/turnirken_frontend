@@ -90,7 +90,7 @@ class TournamentSettings extends React.Component {
             grid: JSON.stringify(this.model.serializeDiagram()),
             id: this.props.match.params.id
         })
-        this.props.tour(this.props.match.params.id);
+        //this.props.tour(this.props.match.params.id);
     //    this.props.groupsTt(this.props.match.params.id);
      //   this.props.matchesAllInTour(this.props.match.params.id);
     }
@@ -150,6 +150,8 @@ class TournamentSettings extends React.Component {
                                 <option>1/32</option>
                                 <option>1/64</option>
                                 <option>1/128</option>
+                                <option>За 3-е место</option>
+                                <option>За 5-е место</option>
                                 <option>Другое</option>
                             </Form.Control>
                         </Col>

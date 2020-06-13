@@ -130,6 +130,7 @@ class TournamentOrganizerPanel extends React.Component {
 
                 <TournamentSettings/>
 
+
                 <Card style={{ maxHeight:"50rem",margin: '12px'}}>
                     <div  className="d-flex flex-wrap justify-content-between" >
 

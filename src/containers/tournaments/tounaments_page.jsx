@@ -42,7 +42,8 @@ class TournamentPage extends React.Component {
         }
     }
 
-    componentDidMount() {
+    UNSAFE_componentWillMount() {
+        this.setState({});
         this.props.search({
             str: "" //, page: 0
         });

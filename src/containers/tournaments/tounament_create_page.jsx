@@ -57,11 +57,15 @@ class TournamentCreatePage extends React.Component {
                 <Card style={{margin: '12px'}}>
                     <Card.Header as="h4">Создание турнира</Card.Header>
                     <Card.Body>
+                        <Alert key="6" variant="info">
+                            Звездочкой помечены обязательные поля
+                        </Alert>
+
                         <Form onSubmit={this.onSubmit}>
                             <Form.Group controlId="formBasicLogin">
-                                <Form.Label>Название турнира</Form.Label>
+                                <Form.Label>* Название турнира</Form.Label>
                                 <Form.Control  type="text" name="name" onChange={this.onChangeInput}
-                                              required/>
+                                               required/>
                             </Form.Group>
 
                             <Form.Group controlId="exampleForm.SelectCustom">
@@ -71,7 +75,7 @@ class TournamentCreatePage extends React.Component {
                             </Form.Group>
 
                             <Form.Group controlId="exampleForm.SelectCustom">
-                                <Form.Label>Игра</Form.Label>
+                                <Form.Label>* Игра</Form.Label>
                                 <Form.Control type="text" name="game" onChange={this.onChangeInput}
                                               required/>
                             </Form.Group>
@@ -96,7 +100,7 @@ class TournamentCreatePage extends React.Component {
                             </Form.Group>
 
                             <Form.Group controlId="exampleForm.SelectCustom">
-                                <Form.Label>Макс. кол-во участников</Form.Label>
+                                <Form.Label>* Макс. кол-во участников</Form.Label>
                                 <Form.Control style={{width: "20%"}} type="number" name="maxParticipants" min="2" max="100" onChange={this.onChangeInput}
                                               required/>
                             </Form.Group>

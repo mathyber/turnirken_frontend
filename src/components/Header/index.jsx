@@ -12,7 +12,7 @@ class Header extends React.Component {
         this.onClick = this.onClick.bind(this);
     }
 
-    componentDidMount() {
+    UNSAFE_componentWillMount() {
        if (JwtHelper.isTokenExist) this.props.getUserProfile();
         console.log(this.props.isAuth)
     }

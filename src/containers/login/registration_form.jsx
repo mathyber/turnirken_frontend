@@ -2,7 +2,7 @@ import {compose, bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import React, {useState} from 'react'
 import {useHistory, withRouter} from "react-router";
-
+import ReCAPTCHA from "react-google-recaptcha";
 import actions from '../../actions';
 
 import Form from "react-bootstrap/Form";
@@ -19,7 +19,8 @@ class RegForm extends React.Component{
             login: '',
             password: '',
             confirmPassword: '',
-            email: ''
+            email: '',
+            reCaptcha: false
         };
         this.onChangeInput = this.onChangeInput.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -41,8 +42,15 @@ class RegForm extends React.Component{
         });
     };
 
+    onChangeReCaptcha = (value) => {
+        this.setState({
+            reCaptcha: value
+        })
+    };
+
     onSubmit = (event) => {
-        if (this.state.password === this.state.confirmPassword && this.state.login && this.state.password){
+        if (this.state.reCaptcha===false) this.setState({reCaptcha: null})
+        if (this.state.password === this.state.confirmPassword && this.state.login && this.state.password && this.state.reCaptcha){
             event.preventDefault();
             this.props.reg({
                 login: this.state.login,
@@ -59,7 +67,7 @@ render(){
         <Card style={{ width: 'auto', margin: '12px' }}>
             <Card.Header as="h5">Регистрация</Card.Header>
             <Card.Body>
-                <Form onSubmit={this.onSubmit}>
+                <Form>
                     {
                         this.props.regError ?
                         <Alert key="1" variant="danger">
@@ -119,9 +127,23 @@ render(){
                                     Пароли не совпадают
                                 </Form.Text>
                         }
+
+                    </Form.Group>
+                    <Form.Group controlId="formBasicCaptcha">
+                        <ReCAPTCHA
+                            sitekey="6LcxoaMZAAAAANucfHAq3UK9ymNQEZ6WJlgIGLg-"
+                            onChange={this.onChangeReCaptcha}
+                        />
+                        {
+                        this.state.reCaptcha === null &&
+                        <Form.Text style={{color: "red"}}>
+                            Пройдите проверку
+                        </Form.Text>
+                    }
                     </Form.Group>
 
-                    <Button variant="primary" type="submit" disabled={this.state.password !== this.state.confirmPassword
+
+                    <Button onClick={this.onSubmit} variant="primary" disabled={this.state.password !== this.state.confirmPassword
                     || !this.state.password || !this.state.login || !this.state.email  }>
                         Зарегистрироваться
                     </Button>
