@@ -37,7 +37,7 @@ function* workerMatch({ payload, history }) {
 
 function* workerMatches({ payload, history }) {
     try {
-        let m = yield call(() => postman.post('/matches/getAllMatchesTournament', {id:payload}));
+        let m = yield call(() => postman.get('/matches/getAllMatchesTournament/'+payload));
         yield console.log(m);
         yield put(actions.matchesSuccess({matchesTour: m}));
     } catch (e) {

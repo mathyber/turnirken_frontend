@@ -27,6 +27,13 @@ export const TOURNAMENT_PARTICIPANTS_REQUEST = 'TOURNAMENT_PARTICIPANTS_REQUEST'
 export const TOURNAMENT_PARTICIPANTS_SUCCESS = 'TOURNAMENT_PARTICIPANTS_SUCCESS';
 export const TOURNAMENT_PARTICIPANTS_FAILURE = 'TOURNAMENT_PARTICIPANTS_FAILURE';
 
+export const TOURNAMENT_DELETE_REQUEST = 'TOURNAMENT_DELETE_REQUEST';
+export const TOURNAMENT_DELETE_SUCCESS = 'TOURNAMENT_DELETE_SUCCESS';
+export const TOURNAMENT_DELETE_FAILURE = 'TOURNAMENT_DELETE_FAILURE';
+
+export const TOURNAMENT_PARTICIPANT_DELETE_REQUEST = 'TOURNAMENT_PARTICIPANT_DELETE_REQUEST';
+export const TOURNAMENT_PARTICIPANT_DELETE_SUCCESS = 'TOURNAMENT_PARTICIPANT_DELETE_SUCCESS';
+export const TOURNAMENT_PARTICIPANT_DELETE_FAILURE = 'TOURNAMENT_PARTICIPANT_DELETE_FAILURE';
 
 export const tournamentsAllRequest = () => (
     {
@@ -145,5 +152,37 @@ export const tournamentSearchSuccess = (payload) => ({
 
 export const tournamentSearchFailure = payload => ({
     type: TOURNAMENTS_SEARCH_FAILURE,
+    payload
+});
+
+
+export const tournamentPartDeleteRequest = (payload) => ({
+    type: TOURNAMENT_PARTICIPANT_DELETE_REQUEST,
+    payload,
+});
+
+export const tournamentPartDeleteSuccess = (payload) => ({
+    type: TOURNAMENT_PARTICIPANT_DELETE_SUCCESS,
+    payload
+});
+
+export const tournamentPartDeleteFailure = payload => ({
+    type: TOURNAMENT_PARTICIPANT_DELETE_FAILURE,
+    payload
+});
+
+
+export const tournamentDeleteRequest = (payload, history) => ({
+    type: TOURNAMENT_DELETE_REQUEST,
+    payload, history
+});
+
+export const tournamentDeleteSuccess = (payload) => ({
+    type: TOURNAMENT_DELETE_SUCCESS,
+    payload
+});
+
+export const tournamentDeleteFailure = payload => ({
+    type: TOURNAMENT_DELETE_FAILURE,
     payload
 });

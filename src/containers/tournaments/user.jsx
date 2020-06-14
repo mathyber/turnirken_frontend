@@ -6,7 +6,7 @@ import actions from "../../actions";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
 import selectorauth from "../../selectors/auth";
-import selectorm from "../../selectors/matches";
+import selectorr from "../../selectors/registration";
 import selector from "../../selectors/userProfile";
 import CardGroup from "react-bootstrap/CardGroup";
 import Button from "react-bootstrap/Button";
@@ -27,10 +27,18 @@ class Profile extends React.Component {
 
     componentDidMount() {
         this.props.getUserProfile({id: this.props.match.params.id});
+     //   this.props.getUser();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         //    if(this.props.groupTt.results != prevProps.groupTt.results) this.props.groupT(this.props.match.params.id);
+    }
+
+
+    UNSAFE_componentWillUpdate(nextProps, nextState){
+        if (nextProps.roleI !== this.props.roleI){
+            this.props.getUserProfile({id: this.props.match.params.id});
+        }
     }
 
     date(str) {
@@ -38,8 +46,27 @@ class Profile extends React.Component {
         return date.toLocaleString();
     }
 
-    onClick() {
+    onModer(id) {
+        this.props.setRole({
+            id: id,
+            role: "ROLE_MODERATOR"
+        });
     }
+
+    isAdmin(){
+        for(let i=0; i<this.props.user.roles.length; i++){
+            if (this.props.user.roles[i].name === "ROLE_ADMIN") return true;
+        }
+        return false;
+    }
+
+    isModer(){
+        for(let i=0; i<this.props.userProfile.roles.length; i++){
+            if (this.props.userProfile.roles[i].name === "ROLE_MODERATOR") return true;
+        }
+        return false;
+    }
+
 
     render() {
         console.log(this.props);
@@ -61,6 +88,27 @@ class Profile extends React.Component {
                     <Card.Text>
                         Организовал <b>{this.props.userProfile.numOrg}</b> турнир(-a,-ов)
                     </Card.Text>
+
+                    {
+                        (this.props.userProfile.roles != null && this.props.user.roles != null && this.isAdmin()===true) && <Card>
+                            {
+                                this.isModer()===false?
+                                    <Button style={{marginLeft: "5px"}} variant="info"
+                                            onClick={() => this.onModer(this.props.userProfile.id)}>
+                                        {
+                                            <div>сделать модератором</div>
+                                        }
+                                    </Button> : <Button style={{marginLeft: "5px"}} variant="info"
+                                                        onClick={() => this.onModer(this.props.userProfile.id)}>
+                                        {
+                                            <div>убрать роль модератора</div>
+                                        }
+                                    </Button>
+                            }
+                        </Card>
+                    }
+
+
                 </Card>
 
 
@@ -167,6 +215,7 @@ class Profile extends React.Component {
 
         )
     }
+
 }
 
 //this.props.userProfile.login === this.props.matchTt.player1.login?
@@ -178,6 +227,10 @@ const mapStateToProps = (state, id) => ({
     // groupTt: selector.groupT(state),
     //  getErrorGrid: selectortour.getErrorGrid(state),
     userProfile: selector.getFullProfile(state),
+    user: selector.getProfile(state),
+    roleError: selectorr.roleError(state),
+    roleI: selectorr.roleI(state),
+
     // engine: state.engine
 });
 
@@ -187,6 +240,8 @@ const mapDispatchToProps = dispatch =>
             //  matchGr: (id) => actions.matchesGroupRequest(id),
             //    groupT: (id) => actions.groupRequest(id),
             getUserProfile: (payload) => actions.profileRequest(payload),
+         //   getUser: (payload) => actions.userProfileRequest(payload),
+            setRole: (payload) => actions.setRoleRequest(payload),
         },
         dispatch);
 

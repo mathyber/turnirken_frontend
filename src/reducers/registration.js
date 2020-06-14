@@ -1,4 +1,6 @@
 import {
+    SET_ROLE_FAILURE,
+    SET_ROLE_REQUEST, SET_ROLE_SUCCESS,
     USER_REG_FAILURE,
     USER_REG_REQUEST,
     USER_REG_SUCCESS, USER_TEST_EMAIL_FALSE,
@@ -9,11 +11,20 @@ import {
 const initialState = {
     regError: null,
     testLogin: null,
-    testEmail: null
+    testEmail: null,
+    roleError: null,
+    roleI: true
 };
 
 export default function (state = initialState, { type, payload }) {
     switch (type) {
+        case SET_ROLE_REQUEST:
+            return { ...state };
+        case SET_ROLE_SUCCESS:
+            return { ...state, ...payload, roleError: false, roleI: !state.roleI };
+        case SET_ROLE_FAILURE:
+            return { ...state, ...payload, roleError: true };
+
         case USER_REG_REQUEST:
             return { ...state };
         case USER_REG_SUCCESS:

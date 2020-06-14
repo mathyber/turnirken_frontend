@@ -4,11 +4,17 @@ import JwtHelper from '../utils/jwtHelper';
 import { postman, setAccessToken } from "../utils/postman";
 import {
     TOURNAMENT_CREATE_REQUEST,
-    TOURNAMENT_ID_REQUEST, TOURNAMENT_PARTICIPANTS_REQUEST, TOURNAMENT_REG_REQUEST,
+    TOURNAMENT_DELETE_REQUEST,
+    TOURNAMENT_ID_REQUEST,
+    TOURNAMENT_PARTICIPANT_DELETE_REQUEST,
+    TOURNAMENT_PARTICIPANTS_REQUEST,
+    TOURNAMENT_REG_REQUEST,
     TOURNAMENT_SAVE_GRID_REQUEST,
-    TOURNAMENTS_ALL_REQUEST, TOURNAMENTS_SEARCH_GAME_REQUEST, TOURNAMENTS_SEARCH_REQUEST
+    TOURNAMENTS_ALL_REQUEST,
+    TOURNAMENTS_SEARCH_GAME_REQUEST,
+    TOURNAMENTS_SEARCH_REQUEST
 } from "../actions/tournaments";
-import {TOURNAMENT_SETTINGS_LINK} from "../routes/link";
+import {TOURNAMENT_SETTINGS_LINK, TOURNAMENTS_LINK} from "../routes/link";
 
 function* workerToursAll() {
     try {
@@ -111,6 +117,29 @@ function* workerTourParticipants({ payload }) {
     }
 }
 
+function* workerTourPartDelete({ payload }) {
+    try {
+       // console.log(payload);
+        yield call(() => postman.get('/tournaments/deleteTournamentPart/'+ payload.id));
+        //  yield console.log(tour);
+        yield put(actions.tournamentPartDeleteSuccess());
+    } catch (e) {
+        console.log(e);
+        yield put(actions.tournamentPartDeleteFailure(e));
+    }
+}
+
+function* workerTourDelete({ payload, history }) {
+    try {
+        yield call(() => postman.get('/tournaments/deleteTournament/'+payload.id ));
+        //  yield console.log(tour);
+        yield history.push(TOURNAMENTS_LINK);
+        yield put(actions.tournamentDeleteSuccess());
+    } catch (e) {
+        console.log(e);
+        yield put(actions.tournamentDeleteFailure(e));
+    }
+}
 
 export default function* watchToursAll() {
     yield takeLatest(TOURNAMENTS_ALL_REQUEST, workerToursAll)
@@ -121,5 +150,7 @@ export default function* watchToursAll() {
     yield takeLatest(TOURNAMENT_ID_REQUEST, workerTourId)
     yield takeLatest(TOURNAMENT_REG_REQUEST, workerTourReg)
     yield takeLatest(TOURNAMENT_PARTICIPANTS_REQUEST, workerTourParticipants)
+    yield takeLatest(TOURNAMENT_DELETE_REQUEST, workerTourDelete)
+    yield takeLatest(TOURNAMENT_PARTICIPANT_DELETE_REQUEST, workerTourPartDelete)
 
 }

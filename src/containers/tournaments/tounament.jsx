@@ -39,7 +39,8 @@ class Tournament extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            grid: false
+            grid: false,
+            clk: false
         }
         this.engine.installDefaultFactories();
         this.engine.setDiagramModel(this.model);
@@ -61,9 +62,21 @@ class Tournament extends React.Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.tournament !== this.props.tournament) {
-          //  this.props.tour(this.props.match.params.id);
+           // this.props.tour(this.props.match.params.id);
             if(this.props.tournament.grid!==null)
                 this.model.deSerializeDiagram(JSON.parse(this.props.tournament.grid), this.engine);
+        }
+
+    }
+
+    UNSAFE_componentWillUpdate(nextProps, nextState){
+        if (nextProps.delPartError !== this.props.delPartError){
+            this.props.tour(this.props.match.params.id);
+            this.props.participants(this.props.match.params.id);
+        }
+        if (nextProps.regError !== this.props.regError){
+            this.props.tour(this.props.match.params.id);
+            this.props.participants(this.props.match.params.id);
         }
     }
 
@@ -113,6 +126,29 @@ class Tournament extends React.Component {
     onParticipate(id) {
         this.setState({num: id})
         this.props.reg({id: id});
+      //  this.setState({upd: !this.state.upd});
+    }
+
+    onDeletePart(id) {
+        this.props.deleteTournamentPart({
+            id: id
+        });
+      //  this.setState({upd: !this.state.upd});
+    }
+
+    isModerOrAdmin(){
+
+        for(let i=0; i<this.props.userProfile.roles.length; i++){
+            if (this.props.userProfile.roles[i].name === "ROLE_ADMIN" || this.props.userProfile.roles[i].name === "ROLE_MODERATOR") return true;
+        }
+        return false;
+    }
+
+    onDelete() {
+        this.props.deleteTournament({
+            id: this.props.match.params.id
+        }, this.props.history);
+        this.setState({clk: false})
     }
 
     render() {
@@ -148,14 +184,15 @@ class Tournament extends React.Component {
                             {this.props.tournament.info && this.props.tournament.info.slice(0, 200) + ""}
                         </Card.Text>
                         {
-                            this.state.num === this.props.tournament.id ? this.props.regError === true ?
+                            (this.state.num === this.props.tournament.id  && this.props.delPartError !== false)  ? this.props.regError === true ?
                                 <Alert key="1" variant="danger">
                                     При регистрации произошла ошибка
-                                </Alert> : this.props.regError === false &&
+                                </Alert> : (this.props.regError === false) &&
                                 <Alert key="2" variant="success">
                                     Вы теперь участвуете в этом турнире
                                 </Alert> : ""
                         }
+
                         {
                             this.props.tournament.organizer.user_id === this.props.userProfile.id ?
                                 <Button variant="info"
@@ -171,6 +208,23 @@ class Tournament extends React.Component {
                                         this.buttonStr(this.props.tournament)
                                     }
                                 </Button>
+                        }
+                        {
+                            this.props.userProfile.roles != null && ((this.props.tournament.organizer.user_id === this.props.userProfile.id && this.props.tournament.dateStart === null)  ||( this.isModerOrAdmin() && this.props.tournament.dateFinish === null)) &&
+                            <Button style={{marginLeft:"5px"}} variant={!this.state.clk ? "danger" : "success"} onClick={()=>this.setState({clk: !this.state.clk})}>
+                                {
+                                    !this.state.clk ?
+                                    <div>Удалить турнир</div> : <div>Не удалять</div>
+                                }
+                            </Button>
+                        }
+                        {
+                            this.state.clk &&
+                            <Button style={{marginLeft:"5px"}} variant="danger" onClick={()=>this.onDelete()}>
+                                {
+                                    <div>Подтвердить удаление</div>
+                                }
+                            </Button>
                         }
                     </Card.Body>
                 </Card>
@@ -188,9 +242,19 @@ class Tournament extends React.Component {
                                     <Card className="card text-white" bg={part.info && part.info==="Победитель" ? "warning" : "primary" }
                                           style={{margin: '10px', padding: "10px",paddingLeft:"50px"}}
                                           key={part.id}>
+                                        <Row>
                                         {part.login ? part.login : "участника еще нет"}
                                         {part.info && " - "+ part.info}
-                                    </Card>)
+                                        {
+                                            ((this.props.tournament.organizer.user_id === this.props.userProfile.id && this.props.tournament.dateStart === null) ||( this.props.userProfile.id === part.user_id && this.props.tournament.dateStart === null)) &&
+                                            <Button style={{marginLeft:"5px", padding: "0", paddingLeft:"10px", paddingRight:"10px"}} variant="danger" onClick={()=>this.onDeletePart(part.id)}>
+                                                {
+                                                    <div>убрать из списка участников</div>
+                                                }
+                                            </Button>
+                                        }</Row>
+                                    </Card>
+                                )
                             )
                         }
                     </div>
@@ -365,6 +429,7 @@ const mapStateToProps = (state) => ({
     userProfile: selector.getProfile(state),
     // engine: state.engine
     regError: selectortour.getErrorReg(state),
+    delPartError: selectortour.getErrorDelPart(state),
     groupsT: selectorgr.groupsT(state),
    // matchesAll: selectorm.matchesAll(state),
     matchesTour: selectorm.matchesTour(state),
@@ -379,6 +444,8 @@ const mapDispatchToProps = dispatch =>
             reg: (payload) => actions.tournamentRegRequest(payload),
             groupsTt: (id) => actions.groupsRequest(id),
             matchesAllInTour: (id) => actions.matchesRequest(id),
+            deleteTournament: (payload, history) => actions.tournamentDeleteRequest(payload, history),
+            deleteTournamentPart: (payload) => actions.tournamentPartDeleteRequest(payload),
             //saveGrid: (payload) => actions.tournamentSaveGridRequest(payload),
         },
         dispatch);

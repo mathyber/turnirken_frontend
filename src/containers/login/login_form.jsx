@@ -38,8 +38,7 @@ class LoginForm extends React.Component {
                     login: this.state.login,
                     password: this.state.password
                 }, this.props.history);
-            } else console.log("ERROR");
-          //  if (!this.props.isAuth) this.setState({errors: true})
+            }
     };
 
 

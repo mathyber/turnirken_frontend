@@ -26,13 +26,11 @@ import ProfileAuth from "../containers/tournaments/profileAuth";
 function MainRouter() {
     return (
         <Switch>
-
             <Route path={LOGIN_LINK} render={() => JwtHelper.isTokenExist ?
                 <Redirect to={{pathname: {TOURNAMENTS_LINK}}} /> : <LoginForm />} />
             <Route path={REG_LINK} render={() => JwtHelper.isTokenExist ?
                 <Redirect to={{pathname: {TOURNAMENTS_LINK}}} /> : <RegForm />} />
             <Route path={TOURNAMENTS_LINK} component={TournamentPage}/>
-
             <PrivateRoute path={USER_LINK} component={Profile}/>
             <PrivateRoute path={ME_LINK} component={ProfileAuth}/>
             <Route path={MATCH_LINK} component={MatchTour}/>

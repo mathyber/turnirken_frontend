@@ -3,15 +3,14 @@ import actions from '../actions';
 import { USER_LOGIN_REQUEST } from "../actions/login"
 import JwtHelper from '../utils/jwtHelper';
 import { postman } from "../utils/postman";
+import {TOURNAMENTS_LINK} from "../routes/link";
 
 function* workerLogin({ payload, history }) {
     try {
         const {jwt} = yield call(() => postman.post('/login', payload));
-      //  console.log(jwt);
         yield JwtHelper.saveToken(jwt);
-       // yield console.log(postman.get("identity/userInfo"));
         yield put(actions.userLoginSuccess());
-        yield history.push('/tournaments');
+        yield history.push({TOURNAMENTS_LINK});
     } catch (e) {
         console.log(e);
         yield put(actions.userLoginFailure(e));

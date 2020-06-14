@@ -38,10 +38,8 @@ postman.interceptors.response.use(
 export let setAccessToken = token => {
     if (token !== null) {
         postman.defaults.headers.common.Authorization = `Bearer ${token}`;
-       // downloader.defaults.headers.common.Authorization = `Bearer ${token}`;
     } else {
         delete postman.defaults.headers.common.Authorization;
-       // delete downloader.defaults.headers.common.Authorization;
     }
 };
 

@@ -3,6 +3,7 @@ import actions from '../actions';
 import JwtHelper from '../utils/jwtHelper';
 import { postman } from "../utils/postman";
 import {
+    SET_ROLE_REQUEST,
     USER_REG_REQUEST,
     USER_REG_SUCCESS,
     USER_TEST_EMAIL_REQUEST,
@@ -17,6 +18,17 @@ function* workerReg({ payload, history }) {
     } catch (e) {
         console.log(e);
         yield put(actions.userRegFailure(e));
+    }
+}
+
+function* workerSetRole({ payload }) {
+    try {
+        yield call(() => postman.post('/user/setRole', payload));
+       // yield console.log(postman.get("identity/userInfo"));
+        yield put(actions.setRoleSuccess());
+    } catch (e) {
+        console.log(e);
+        yield put(actions.setRoleFailure(e));
     }
 }
 
@@ -48,6 +60,7 @@ function* workerTestLogin({ payload, history }) {
 
 export default function* watchReg() {
     yield takeLatest(USER_REG_REQUEST, workerReg);
+    yield takeLatest(SET_ROLE_REQUEST, workerSetRole);
     yield takeLatest(USER_TEST_LOGIN_REQUEST, workerTestLogin);
     yield takeLatest(USER_TEST_EMAIL_REQUEST, workerTestEmail);
 }

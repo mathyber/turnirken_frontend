@@ -120,17 +120,22 @@ class TournamentPage extends React.Component {
         return date.toLocaleString();
     }
 
-    buttonStr(tour) {
-        if (Date.parse(tour.dateFinish) < this.date1) return "Турнир завершен";
+    buttonStr(tour) { //tour - объект с данными турнира
+        if (Date.parse(tour.dateFinish) < this.date1) //date1 - текущая дата
+            return "Турнир завершен";
         else {
-            if (Date.parse(tour.dateFinishReg) < this.date1) return "Регистрация завершена";
+            if (Date.parse(tour.dateFinishReg) < this.date1)
+                return "Регистрация завершена";
             else {
-                if (Date.parse(tour.dateStart) < this.date1) return "Турнир уже идет";
+                if (Date.parse(tour.dateStart) < this.date1)
+                    return "Турнир уже идет";
                 else {
-                    if (Date.parse(tour.dateStartReg) > this.date1) return "Регистрация на турнир не началась";
+                    if (Date.parse(tour.dateStartReg) > this.date1)
+                        return "Регистрация на турнир не началась";
                     else {
                         if (this.props.isAuth) {
-                            if (!tour.userReg) return "Участвовать";
+                            if (!tour.userReg) //userReg = true, если user - уже участник
+                                return "Участвовать";
                             else return "Вы уже участвуете";
                         } else return "Войдите, чтобы участвовать";
                     }
@@ -165,6 +170,10 @@ class TournamentPage extends React.Component {
     onParticipate(id) {
         this.setState({num: id})
         this.props.reg({id: id});
+    }
+
+    toParticipate(id) {
+        this.props.reg({ id: id });
     }
 
     onChangeInput = (event) => {
