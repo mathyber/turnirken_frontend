@@ -185,7 +185,7 @@ class TournamentSettings extends React.Component {
                 {
                     this.props.tournament ? this.props.tournament.dateStart==null && <Card>
                         <Button style={{margin: '12px'}} onClick={() => this.onClickSaveGrid()}>Сохранить предварительную версию схемы</Button>
-                        <Button disabled={Date.parse(this.props.tournament.dateStartReg) > this.date} style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы и остановить регистрацию</Button>
+                        <Button disabled={Date.parse(this.props.tournament.dateStartReg) > this.date || Date.parse(this.props.tournament.dateFinishReg) < this.date} style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы и остановить регистрацию</Button>
                     </Card>
                          : ""
                 }

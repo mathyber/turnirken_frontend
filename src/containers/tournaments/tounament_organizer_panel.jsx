@@ -204,7 +204,7 @@ class TournamentOrganizerPanel extends React.Component {
                                                   key={part.id}>
                                                 {part.login ? part.login : "участника еще нет"}
                                                 {
-                                                    ((this.props.tournament.organizer.user_id === this.props.userProfile.id && this.props.tournament.dateStart === null) ||( this.props.userProfile.id === part.user_id && this.props.tournament.dateStart === null)) &&
+                                                    ((this.props.tournament.organizer.user_id === this.props.userProfile.id && this.props.tournament.dateFinishReg === null) ||( this.props.userProfile.id === part.user_id && this.props.tournament.dateFinishReg === null)) &&
                                                     <Button style={{ padding: "0", paddingLeft:"10px", paddingRight:"10px"}} variant="danger" onClick={()=>this.onDeletePart(part.id)}>
                                                         {
                                                             <div>убрать из списка участников</div>
