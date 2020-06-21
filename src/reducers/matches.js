@@ -20,6 +20,7 @@ import {
 const initialState = {
     matchesAll: [],
     grError: false,
+    mError: null,
     matchesTour: [],
     matchesGroup: [],
     matchT: {},
@@ -59,9 +60,9 @@ export default function (state = initialState, { type, payload }) {
         case SET_RESULT_MATCH_REQUEST:
             return { ...state, ...payload };
         case SET_RESULT_MATCH_SUCCESS:
-            return { ...state, ...payload, grError: false };
+            return { ...state, ...payload, mError: false };
         case SET_RESULT_MATCH_FAILURE:
-            return { ...state, ...payload, grError: true };
+            return { ...state, ...payload, mError: true };
 
         default:
             return state;

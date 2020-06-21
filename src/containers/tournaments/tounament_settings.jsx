@@ -43,10 +43,10 @@ class TournamentSettings extends React.Component {
             stage: "Финал",
             place: 3,
             grid: false,
+            numb: false
         }
         this.engine.installDefaultFactories();
         this.engine.setDiagramModel(this.model);
-
     }
 
     componentDidMount() {
@@ -64,6 +64,10 @@ class TournamentSettings extends React.Component {
             else {
                 this.model.deSerializeDiagram(JSON.parse(this.props.tournament.grid), this.engine);
             }
+        }
+
+        if(prevState.numb !== this.state.numb){
+            document.querySelector(".diagr").click();
         }
     }
 
@@ -103,6 +107,38 @@ class TournamentSettings extends React.Component {
         });
     };
 
+    listener = function (e) {
+        e.preventDefault();
+    }
+
+    onMouseOver = ()=> {
+      //  document.body.style.overflowY = "hidden"
+        document.addEventListener('wheel', this.listener , {passive: false});
+        //  document.body.style.position = "sticky"
+    }
+
+    onMouseOut = ()=> {
+    //    document.body.style.overflowY = "scroll"
+        document.removeEventListener('wheel', this.listener , {passive: false});
+        // document.body.style.position = "relative"
+    }
+
+    onClickNewGroup=()=>{
+        this.model.addNode(new Group.GroupModel(this.state.group, this.state.groupNum, this.state.groupNumWin, this.state.groupNum)).setPosition(400, 200);
+        this.setState({numb: !this.state.numb})
+    }
+
+    onClickNewPlace=()=>{
+        this.model.addNode(new Final.FinalModel(this.state.place)).setPosition(400, 200);
+        this.setState({numb: !this.state.numb})
+    }
+
+
+    onClickNewMatch=()=>{
+        this.model.addNode(new Match.MatchModel(this.state.stage)).setPosition(400, 200);
+        this.setState({numb: !this.state.numb})
+    }
+
 
     render() {
         console.log(this.props);
@@ -131,9 +167,7 @@ class TournamentSettings extends React.Component {
                             <Form.Control size="sm" type="number" name="groupNumWin" min="1" max={this.state.groupNum } onChange={this.onChangeInput}/>
                         </Col>
                         <Col sm={1}>
-                            <Button size="sm" onClick={() => {
-                                this.model.addNode(new Group.GroupModel(this.state.group, this.state.groupNum, this.state.groupNumWin, this.state.groupNum)).setPosition(400, 200);
-                            }}>+группа</Button>
+                            <Button size="sm" onClick={this.onClickNewGroup}>+группа</Button>
                         </Col>
 
                     </Form.Group>
@@ -156,23 +190,24 @@ class TournamentSettings extends React.Component {
                             </Form.Control>
                         </Col>
                         <Col sm={1}>
-                            <Button size="sm" onClick={() => {
-                                this.model.addNode(new Match.MatchModel(this.state.stage)).setPosition(400, 200);
-                            }}>+матч</Button></Col>
+                            <Button size="sm" onClick={this.onClickNewMatch}>+матч</Button></Col>
                         <Form.Label column sm={1}></Form.Label>
                         <Form.Label column sm={2}>Место:</Form.Label>
                         <Col sm={2}>
                             <Form.Control size="sm" type="number" name="place" min="1" max={this.props.tournament.maxParticipants } onChange={this.onChangeInput}/>
                         </Col>
                         <Col sm={1}>
-                            <Button size="sm" onClick={() => {
-                                this.model.addNode(new Final.FinalModel(this.state.place)).setPosition(400, 200);
-                            }}>+место</Button></Col>
+                            <Button size="sm" onClick={this.onClickNewPlace}>+место</Button></Col>
                     </Form.Group>
 
                 </Card.Body> : ""}
 
-                <SRD.DiagramWidget diagramEngine={this.engine}/>
+                <div onMouseEnter={
+                    this.onMouseOver
+                }
+                     onMouseLeave={//document.body.style.overflow = "scroll"
+                         this.onMouseOut}><SRD.DiagramWidget className="diagr" diagramEngine={this.engine}/></div>
+
                 {
                     this.props.getErrorGrid ?
                         <Alert style={{margin: "15px"}} key="1" variant="danger">
@@ -184,7 +219,7 @@ class TournamentSettings extends React.Component {
                 }
                 {
                     this.props.tournament ? this.props.tournament.dateStart==null && <Card>
-                        <Button style={{margin: '12px'}} onClick={() => this.onClickSaveGrid()}>Сохранить предварительную версию схемы</Button>
+                        <Button disabled={Date.parse(this.props.tournament.dateStartReg) > this.date || Date.parse(this.props.tournament.dateFinishReg) < this.date} style={{margin: '12px'}} onClick={() => this.onClickSaveGrid()}>Сохранить предварительную версию схемы</Button>
                         <Button disabled={Date.parse(this.props.tournament.dateStartReg) > this.date || Date.parse(this.props.tournament.dateFinishReg) < this.date} style={{margin: '12px',marginTop: "-5px"}} onClick={() => this.onClickSaveGridFinal()}>Сохранить окончательную версию схемы и остановить регистрацию</Button>
                     </Card>
                          : ""

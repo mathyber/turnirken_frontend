@@ -71,6 +71,13 @@ class TournamentPage extends React.Component {
             });
         }
 
+        if (prevProps.isAuth !== this.props.isAuth) {
+            this.setState({page: 0, e: true});
+            this.props.search({
+                str: "", page: 0
+            });
+        }
+
         if(prevState.num !== this.state.num ){
             if (this.state.e) {
                 this.props.search({
@@ -248,12 +255,9 @@ class TournamentPage extends React.Component {
                                                         {tour.info && tour.info.slice(0, 200) + ""}
                                                     </Card.Text>
                                                     {
-                                                        this.state.num === tour.id ? this.props.regError === true ?
+                                                        this.state.num === tour.id ? this.props.regError === true &&
                                                             <Alert key="1" variant="danger">
                                                                 При регистрации произошла ошибка
-                                                            </Alert> : this.props.regError === false &&
-                                                            <Alert key="2" variant="success">
-                                                                Вы теперь участвуете в этом турнире
                                                             </Alert> : ""
                                                     }
                                                     {

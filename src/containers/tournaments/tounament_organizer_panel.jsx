@@ -20,6 +20,7 @@ import {FormRow} from "react-bootstrap";
 import CardGroup from "react-bootstrap/CardGroup";
 import GroupSettings from "./tounament_group_set";
 import Container from "react-bootstrap/Container";
+import * as SRD from "storm-react-diagrams";
 
 class TournamentOrganizerPanel extends React.Component {
     date1 = new Date();
@@ -51,10 +52,35 @@ class TournamentOrganizerPanel extends React.Component {
         if (nextProps.delPartError !== this.props.delPartError){
             this.props.tour(this.props.match.params.id);
             this.props.participants(this.props.match.params.id);
+            this.props.groups(this.props.match.params.id);
+            this.props.groupsTt(this.props.match.params.id);
+            this.props.matches(this.props.match.params.id);
+            this.props.matchesAllInTour(this.props.match.params.id);
         }
         if (nextProps.regError !== this.props.regError){
             this.props.tour(this.props.match.params.id);
             this.props.participants(this.props.match.params.id);
+            this.props.groups(this.props.match.params.id);
+            this.props.groupsTt(this.props.match.params.id);
+            this.props.matches(this.props.match.params.id);
+            this.props.matchesAllInTour(this.props.match.params.id);
+        }
+        if (nextProps.getErrorGrid !== this.props.getErrorGrid){
+            this.props.tour(this.props.match.params.id);
+            this.props.participants(this.props.match.params.id);
+            this.props.groups(this.props.match.params.id);
+            this.props.groupsTt(this.props.match.params.id);
+            this.props.matches(this.props.match.params.id);
+            this.props.matchesAllInTour(this.props.match.params.id);
+        }
+
+        if (nextProps.grError !== this.props.grError){
+            this.props.tour(this.props.match.params.id);
+            this.props.participants(this.props.match.params.id);
+            this.props.groups(this.props.match.params.id);
+            this.props.groupsTt(this.props.match.params.id);
+            this.props.matches(this.props.match.params.id);
+            this.props.matchesAllInTour(this.props.match.params.id);
         }
     }
 
@@ -111,9 +137,6 @@ class TournamentOrganizerPanel extends React.Component {
         } else {
             this.setState({err: true});
         }
-        this.props.tour(this.props.match.params.id);
-        this.props.groupsTt(this.props.match.params.id);
-        this.props.matchesAllInTour(this.props.match.params.id);
     }
 
     onChangeInputGroup = (event) => {
@@ -133,6 +156,7 @@ class TournamentOrganizerPanel extends React.Component {
         });
         console.log(this.state);
     };
+
 
     render() {
         console.log(this.props);
@@ -184,6 +208,7 @@ class TournamentOrganizerPanel extends React.Component {
                 <TournamentSettings/>
 
 
+
                 <Card style={{ maxHeight:"50rem",margin: '12px'}}>
                     <div  className="d-flex flex-wrap justify-content-between" >
 
@@ -202,7 +227,7 @@ class TournamentOrganizerPanel extends React.Component {
                                             <Card className="card text-white bg-primary"
                                                   style={{margin: '5px', padding: "5px"}}
                                                   key={part.id}>
-                                                {part.login ? part.login : "участника еще нет"}
+                                                {part.login ? <a style={{textDecoration: "none", color: "white"}} href={part.user_id && "/user/"+ part.user_id}>{part.login}</a> : "участника еще нет"}
                                                 {
                                                     ((this.props.tournament.organizer.user_id === this.props.userProfile.id && this.props.tournament.dateFinishReg === null) ||( this.props.userProfile.id === part.user_id && this.props.tournament.dateFinishReg === null)) &&
                                                     <Button style={{ padding: "0", paddingLeft:"10px", paddingRight:"10px"}} variant="danger" onClick={()=>this.onDeletePart(part.id)}>
@@ -496,6 +521,7 @@ const mapStateToProps = (state) => ({
     getErrorGrid: selectortour.getErrorGrid(state),
     userProfile: selector.getProfile(state),
     groupsAll: selectorgr.groupsAll(state),
+    grError: selectorgr.grSError(state),
     groupsT: selectorgr.groupsT(state),
     regError: selectortour.getErrorReg(state),
     delPartError: selectortour.getErrorDelPart(state),

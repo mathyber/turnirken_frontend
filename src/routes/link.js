@@ -13,3 +13,4 @@ export const MATCH_LINK = "/match/:id";
 export const USER_LINK = "/user/:id";
 export const ME_LINK = "/me";
 export const GROUP_LINK = "/group/:id";
+export const PD_LINK = "/personal";

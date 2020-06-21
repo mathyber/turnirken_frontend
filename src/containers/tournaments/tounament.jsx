@@ -184,12 +184,9 @@ class Tournament extends React.Component {
                             {this.props.tournament.info && this.props.tournament.info.slice(0, 200) + ""}
                         </Card.Text>
                         {
-                            (this.state.num === this.props.tournament.id  && this.props.delPartError !== false)  ? this.props.regError === true ?
+                            (this.state.num === this.props.tournament.id  && this.props.delPartError !== false)  ? this.props.regError === true &&
                                 <Alert key="1" variant="danger">
                                     При регистрации произошла ошибка
-                                </Alert> : (this.props.regError === false) &&
-                                <Alert key="2" variant="success">
-                                    Вы теперь участвуете в этом турнире
                                 </Alert> : ""
                         }
 
@@ -230,20 +227,20 @@ class Tournament extends React.Component {
                 </Card>
                 <Button style={{margin: '12px'}} onClick={() => this.setState({grid: !this.state.grid})}>{this.state.grid? "Закрыть ":"Открыть "} схему турнира</Button>
                 {
-                    this.state.grid && <SRD.DiagramWidget diagramEngine={this.engine}/>
+                    this.state.grid && <SRD.DiagramWidget className="diagr" diagramEngine={this.engine}/>
                 }
 
                 <Card style={{margin: '12px'}}>
                     <Card.Header as="h5">Участники</Card.Header>
-                    <div style={{maxHeight: "20rem", overflowY: "scroll"}}>
+                    <div style={{maxHeight: "20em",overflowY: "scroll"}}>
 
                         {
                             this.props.tparticipants.map(part => (
-                                    <Card className="card text-white" bg={part.info && part.info==="Победитель" ? "warning" : "primary" }
-                                          style={{margin: '10px', padding: "10px",paddingLeft:"50px"}}
+                                    <Card  className="card text-white" bg={part.info && part.info==="Победитель" ? "warning" : "primary" }
+                                          style={{margin: '10px',padding: "10px",paddingLeft:"50px"}}
                                           key={part.id}>
                                         <Row>
-                                        {part.login ? part.login : "участника еще нет"}
+                                        {part.login ? <a style={{textDecoration: "none", color: "white"}} href={part.user_id && "/user/"+ part.user_id}>{part.login}</a> : "участника еще нет"}
                                         {part.info && " - "+ part.info}
                                         {
                                             ((this.props.tournament.organizer.user_id === this.props.userProfile.id && this.props.tournament.dateFinishReg === null) ||( this.props.userProfile.id === part.user_id && this.props.tournament.dateFinishReg === null)) &&

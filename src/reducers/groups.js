@@ -16,6 +16,7 @@ import {
 const initialState = {
     groupsAll: [],
     grError: false,
+    grSError: null,
     groupT: {},
     groupsT: []
 };
@@ -32,9 +33,9 @@ export default function (state = initialState, { type, payload }) {
         case GROUPS_SAVE_REQUEST:
             return { ...state, ...payload };
         case GROUPS_SAVE_SUCCESS:
-            return { ...state, ...payload, grError: false };
+            return { ...state, ...payload, grSError: false };
         case GROUPS_SAVE_FAILURE:
-            return { ...state, ...payload, grError: true };
+            return { ...state, ...payload, grSError: true };
 
         case GROUPS_REQUEST:
             return { ...state, ...payload };

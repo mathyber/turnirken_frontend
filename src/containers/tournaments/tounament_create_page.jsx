@@ -132,7 +132,7 @@ class TournamentCreatePage extends React.Component {
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Label>Дата начала регистрации участников</Form.Label>
+                                <Form.Label>Даты регистрации участников</Form.Label>
                                 <Row>
                                     <Col sm={1}>
                                         c

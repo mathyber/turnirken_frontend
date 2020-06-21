@@ -93,12 +93,12 @@ class Profile extends React.Component {
                         (this.props.userProfile.roles != null && this.props.user.roles != null && this.isAdmin()===true) && <Card>
                             {
                                 this.isModer()===false?
-                                    <Button style={{marginLeft: "5px"}} variant="info"
+                                    <Button variant="info"
                                             onClick={() => this.onModer(this.props.userProfile.id)}>
                                         {
                                             <div>сделать модератором</div>
                                         }
-                                    </Button> : <Button style={{marginLeft: "5px"}} variant="info"
+                                    </Button> : <Button variant="info"
                                                         onClick={() => this.onModer(this.props.userProfile.id)}>
                                         {
                                             <div>убрать роль модератора</div>

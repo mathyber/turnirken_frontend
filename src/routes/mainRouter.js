@@ -1,7 +1,7 @@
 import React from "react";
 import {
     GRID_PAGE_LINK, GROUP_LINK,
-    LOGIN_LINK, MATCH_LINK, ME_LINK,
+    LOGIN_LINK, MATCH_LINK, ME_LINK, PD_LINK,
     PROFILE_LINK,
     REG_LINK,
     TOURNAMENT_CREATE_LINK, TOURNAMENT_LINK, TOURNAMENT_ORGANIZER_PANEL_LINK,
@@ -22,6 +22,7 @@ import GroupTour from "../containers/tournaments/group";
 import Tournament from "../containers/tournaments/tounament";
 import Profile from "../containers/tournaments/user";
 import ProfileAuth from "../containers/tournaments/profileAuth";
+import Personal from "../containers/tournaments/personal";
 
 function MainRouter() {
     return (
@@ -36,6 +37,7 @@ function MainRouter() {
             <Route path={MATCH_LINK} component={MatchTour}/>
             <Route path={GROUP_LINK} component={GroupTour}/>
             <Route path={TOURNAMENT_LINK} component={Tournament}/>
+            <Route path={PD_LINK} component={Personal}/>
             <PrivateRoute path={TOURNAMENT_CREATE_LINK} component={TournamentCreatePage}/>
             <PrivateRoute path={TOURNAMENT_SETTINGS_LINK} component={TournamentSettings}/>
             <PrivateRoute path={TOURNAMENT_ORGANIZER_PANEL_LINK} component={TournamentOrg}/>

@@ -41,7 +41,7 @@ class MatchTour extends React.Component {
     }
 
     UNSAFE_componentWillUpdate( nextProps, nextState){
-       if(nextState != this.state)
+       if(nextState !== this.state || nextProps.matchEr !== this.props.matchEr)
            this.props.matchT(this.props.match.params.id);
        // if(nextProps.matchTt.story[0] != this.props.matchTt.story[0]) this.props.matchT(this.props.match.params.id);
     }
@@ -232,6 +232,7 @@ const mapStateToProps = (state) => ({
     isAuth: selectorauth.isAuth(state),
     // tournament: selectortour.getTourId(state),
     matchTt: selectorm.matchT(state),
+    matchEr: selectorm.mError(state),
     //  getErrorGrid: selectortour.getErrorGrid(state),
     userProfile: selector.getProfile(state),
     // engine: state.engine

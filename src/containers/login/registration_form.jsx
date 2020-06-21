@@ -10,7 +10,8 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import selectorreg from "../../selectors/registration";
 import Alert from "react-bootstrap/Alert";
-import {LOGIN_LINK} from "../../routes/link";
+import {LOGIN_LINK, PD_LINK} from "../../routes/link";
+import Col from "react-bootstrap/Col";
 
 class RegForm extends React.Component{
     constructor(props){
@@ -20,7 +21,8 @@ class RegForm extends React.Component{
             password: '',
             confirmPassword: '',
             email: '',
-            reCaptcha: false
+            reCaptcha: false,
+            pd: false
         };
         this.onChangeInput = this.onChangeInput.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -48,17 +50,32 @@ class RegForm extends React.Component{
         })
     };
 
+    onChangeCheck = () =>{
+        this.setState({
+            pd: !this.state.pd
+        })
+    }
+
     onSubmit = (event) => {
         if (this.state.reCaptcha===false) this.setState({reCaptcha: null})
-        if (this.state.password === this.state.confirmPassword && this.state.login && this.state.password && this.state.reCaptcha){
+        if (this.state.password === this.state.confirmPassword && this.state.login && this.state.password && this.state.reCaptcha && this.state.pd){
             event.preventDefault();
             this.props.reg({
                 login: this.state.login,
                 password: this.state.password,
                 email: this.state.email,
             }, this.props.history );
+
+            this.setState({            login: '',
+                password: '',
+                confirmPassword: '',
+                email: '',
+                reCaptcha: false,
+                pd: false});
+            document.getElementById("12345").reset();
         }
         else console.log("ERROR");
+
 
     };
 render(){
@@ -67,7 +84,7 @@ render(){
         <Card style={{ width: 'auto', margin: '12px' }}>
             <Card.Header as="h5">Регистрация</Card.Header>
             <Card.Body>
-                <Form>
+                <Form id="12345">
                     {
                         this.props.regError ?
                         <Alert key="1" variant="danger">
@@ -142,9 +159,19 @@ render(){
                     }
                     </Form.Group>
 
+                    <Form.Group>
+                        <Form.Check
+                            type="checkbox"
+                            label={<div>Я даю согласие на обработку персональных данных в соотвествии с <a href={PD_LINK}>политикой</a></div>}
+                            name="pd"
+                            id="1111111"
+                            onChange={this.onChangeCheck}
+                            required
+                        />
+                    </Form.Group>
 
                     <Button onClick={this.onSubmit} variant="primary" disabled={this.state.password !== this.state.confirmPassword
-                    || !this.state.password || !this.state.login || !this.state.email  }>
+                    || !this.state.password || !this.state.login || !this.state.email || !this.state.pd  }>
                         Зарегистрироваться
                     </Button>
                 </Form>
