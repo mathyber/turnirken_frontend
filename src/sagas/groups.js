@@ -47,7 +47,7 @@ function* workerGroup({ payload, history }) {
 
 function* workerGroupSave({ payload, history }) {
     try {
-        yield call(() => postman.post('/tournaments/setMatchesAndGroups', payload));
+        yield call(() => postman.post('/tournaments/setStartPositions', payload));
        // yield console.log(groups);
         yield put(actions.groupsSaveSuccess());
     } catch (e) {

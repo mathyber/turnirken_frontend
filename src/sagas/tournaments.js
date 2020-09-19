@@ -94,7 +94,7 @@ function* workerTourGrid({ payload, history }) {
 
 function* workerTourReg({ payload, history }) {
     try {
-        yield call(() => postman.post('/tournaments/goParticipate', payload));
+        yield call(() => postman.post('/tournaments/createParticipate', payload));
 
         yield put(actions.tournamentRegSuccess());
         //  yield history.push("/tournament_settings/"+id);
